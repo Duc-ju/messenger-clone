@@ -1,0 +1,47 @@
+
+function Body({ handleLogin }){
+    return (<section className="pt-[40px] px-[30px] pb-[100px] w-full">
+		<div className="grid grid-cols-2 gap-2 pt-[55px] max-w-[1195px] mx-auto">
+			<div className="text-left">
+                <div className="w-[20px] pt-20"></div>
+				<div className="text-[90px] tracking-[-4px] leading-[85px] text-transparent bg-clip-text bg-linear pb-4">Tụ họp <br />mọi lúc, mọi <br /> nơi</div>
+				<div className="text-xl mb-10">Với Messenger, việc kết nối với những người<br /> mình yêu mến thật đơn giản và thú vị.</div>
+                <div>
+				    <a 
+                        className="bg-[#0084ff] cursor-pointer rounded-full px-5 py-1.5 text-xl text-white hover:bg-[#4d4dff] transition delay-50 duration-300 linear"
+                        onClick = {handleLogin}  
+                    >
+                        Đăng nhập bằng Facebook
+                    </a>
+                </div>
+                <div className="my-8">
+				    <a 
+                    className="text-[#4d4dff] cursor-pointer underline"
+                    >
+                    Đăng nhập bằng tài khoản
+                    </a>
+                </div>
+                <div>
+                    <a href="" className="mr-[0.75rem] inline-block">
+                        <img 
+                        className="h-[44px] w-auto" 
+                        src="https://static.xx.fbcdn.net/rsrc.php/v3/yg/r/puWREWrr5nk.png" 
+                        />
+                    </a>
+                    <a href="" className="inline-block">
+                        <img 
+                        className="h-[44px] w-auto"
+                        src="https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/_-Ce3epqZVV.png" 
+                        />
+                    </a>
+                </div>
+
+			</div>
+			<div>
+				<img src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.8562-6/120973513_338186077283942_8148888802958728934_n.png?_nc_cat=1&ccb=1-5&_nc_sid=6825c5&_nc_ohc=8wIIuYN0jIQAX-7BV4M&_nc_ht=scontent.fhan15-1.fna&oh=00_AT-GMgdNnV0OgOEXpbrA_BH5cDJiPVsxxkW1MRsPVUz5bA&oe=61F4CBA7" />
+			</div>
+		</div>
+	</section>)
+}
+
+export default Body
