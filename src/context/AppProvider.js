@@ -40,7 +40,7 @@ function AuthProvider({ children }) {
     };
   }, [uid]);
   useEffect(() =>{
-    let collectionRef = db.collection('rooms').orderBy('createAt');
+    let collectionRef = db.collection('rooms').orderBy('createAt','desc');
     if(roomCondition && roomCondition.compareValue && roomCondition.compareValue.length > 0) {
         collectionRef = collectionRef.where(roomCondition.fieldName, roomCondition.operator, roomCondition.compareValue)
     }
@@ -67,6 +67,7 @@ function AuthProvider({ children }) {
   return (
     <AppContext.Provider value={{ 
       rooms,
+      setRooms,
       currentRoom,
       setCurrentRoom,
       isOpenCreateRoom,

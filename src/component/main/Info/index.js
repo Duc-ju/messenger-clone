@@ -1,10 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { AppContext } from '../../../context/AppProvider'
+import { AuthContext } from '../../../context/AuthProvider'
+import { getRoomName } from '../../../logic/getRoomName'
+import { getPhotoURL } from '../../../logic/getPhotoURL'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 
 
 function Info(){
     const [height, setHeight] = useState(window.innerHeight)
+    const { currentRoom } = useContext(AppContext)
+    const { user } = useContext(AuthContext)
 
     useEffect(() =>{
         function handleResize() {
@@ -26,13 +32,44 @@ function Info(){
         >
             <div className="text-center">
                 <div className="flex justify-center items-center pt-[16px] pb-[12px]">
-                    <img 
-                    src="https://scontent.fhan15-1.fna.fbcdn.net/v/t34.18173-12/p100x100/28908247_2023019334631814_1268202679_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=4de414&_nc_ohc=iUhk_-T5-goAX_DvbjT&_nc_ht=scontent.fhan15-1.fna&oh=00_AT87zOZ-bJ8E8ZizHQ72j_9yp6Hvaft1A4V98rY4DOmHqg&oe=61F55CCB"
-                    alt=""
+                    {currentRoom.members.length === 2 && (
+                  <img
+                    src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[0])}
+                    href=""
                     className="w-[80px] h-[80px] rounded-full"
-                    />
+                  />
+                )}
+                {currentRoom.members.length > 2 && currentRoom.photoURL && (
+                  <img
+                    src={currentRoom.photoURL}
+                    href=""
+                    className="w-[80px] h-[80px] rounded-full"
+                  />
+                )}
+                {currentRoom.members.length > 2 && !currentRoom.photoURL && (
+                  <div className="relative w-[80px] h-[80px]">
+                    <div className="absolute right-0 top-0">
+                      <img
+                        src={getPhotoURL(currentRoom.members[0])}
+                        href={currentRoom.members[0].displayName
+                          ?.charAt(0)
+                          .toUpperCase()}
+                        className="w-[54px] h-[54px] rounded-full"
+                      />
+                    </div>
+                    <div className="absolute left-0 bottom-0">
+                      <img
+                        src={getPhotoURL(currentRoom.members[1])}
+                        href={currentRoom.members[1].displayName
+                          ?.charAt(0)
+                          .toUpperCase()}
+                        className="w-[38px] h-[38px] rounded-full border-2 border-white"
+                      />
+                    </div>
+                  </div>
+                )}
                 </div>
-                <h3 className="text-[1.0625rem] font-semibold">Best Xaolil</h3>
+                <h3 className="text-[1.0625rem] font-semibold">{getRoomName(currentRoom)}</h3>
                 <p className="text-[.8125rem] font-normal text-[#65676B]">Đang hoạt động</p>
             </div>
             <div className="py-[20px]">

@@ -25,7 +25,7 @@ function Main() {
                     width: openInfo?'25%':'0%'
                 }}
             >
-                <Info />
+                {currentRoom&&openInfo&&<Info />}
             </div>
         </div>
     </div>)

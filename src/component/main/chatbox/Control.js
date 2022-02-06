@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { addDocument } from "../../../firebase/services";
@@ -16,23 +16,62 @@ import {
 function Control() {
   const [message, setMessage] = useState("");
   const [isTyped, setIsTyped] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const inputElement = useRef();
-  const { currentRoom, openInfo } = useContext(AppContext);
+  const {
+    currentRoom,
+    openInfo,
+    setOpenInfo,
+    isOpenCreateRoom,
+    choosers,
+    setChoosers,
+    rooms,
+    setCurrentRoom,
+    setIsOpenCreateRoom,
+  } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
   const handleButtonSubmit = () => {
-    if (message.replace(/\s/g, "").length) {
+    if (isOpenCreateRoom) {
+      if (message.replace(/\s/g, "").length) {
+        addDocument("rooms", {
+          members: [...choosers, user].map((member) => member.uid),
+        });
+        setIsOpenCreateRoom(false)
+        setCurrentRoom()
+        setIsPending(true);
+        setChoosers([])
+        setOpenInfo(true)
+      }
+    } else {
+      if (message.replace(/\s/g, "").length) {
+        addDocument("messages", {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          rid: currentRoom.id,
+          content: message,
+        });
+        setMessage("");
+      }
+    }
+    setIsTyped(false);
+  };
+  useEffect(() => {
+    if(isPending){
+      setIsOpenCreateRoom(false);
+      setCurrentRoom(rooms[0]);
       addDocument("messages", {
         uid: user.uid,
         displayName: user.displayName,
         photoURL: user.photoURL,
-        rid: currentRoom.id,
+        rid: rooms[0].id,
         content: message,
       });
+      setIsPending(false);
     }
-    setMessage("");
-    setIsTyped(false);
-  };
+  }, [rooms]);
+
   const handleSubmit = (e) => {
     if (e.code === "Enter") {
       handleButtonSubmit();
@@ -45,7 +84,6 @@ function Control() {
     else setIsTyped(false);
   };
 
-  
   return (
     <div
       className="fixed bottom-0 py-[12px] border-r bg-white"

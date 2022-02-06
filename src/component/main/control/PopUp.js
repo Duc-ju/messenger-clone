@@ -1,14 +1,28 @@
 
-import { useEffect, useRef, memo } from 'react'
+import { useEffect, useRef, memo, useContext } from 'react'
 import { auth } from '../../../firebase/config'
+import { AppContext } from '../../../context/AppProvider'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 function PopUp({ handleClosePopUp }){
     const popUpElement = useRef()
-
+    const { 
+        setRooms,
+        setCurrentRoom,
+        setIsOpenCreateRoom,
+        setChoosers,
+        setOpenInfo,
+        setSearchRoom,
+        } = useContext(AppContext);
     const handleLogout = ()=>{
+        setRooms([])
+        setCurrentRoom()
+        setIsOpenCreateRoom(false)
+        setChoosers([])
+        setOpenInfo(false)
+        setSearchRoom()
         auth.signOut()
     }
 
