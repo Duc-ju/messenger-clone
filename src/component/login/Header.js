@@ -31,7 +31,7 @@ function Header(){
             <div className="flex justify-between mx-auto h-[100px] max-w-[1195px]">
                 <div className="w-24 flex items-center">
                     <img 
-                    src="img/logo.png"
+                    src={process.env.PUBLIC_URL + '/img/logo.png'}
                     alt="logo" 
                     className="w-10 h-10"
                     />

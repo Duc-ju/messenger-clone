@@ -25,20 +25,23 @@ function Body({ handleLogin }){
                     <a href="" className="mr-[0.75rem] inline-block">
                         <img 
                         className="h-[44px] w-auto" 
-                        src="img/microsoftD.png" 
+                        src={process.env.PUBLIC_URL + '/img/microsoftD.png'} 
                         />
                     </a>
                     <a href="" className="inline-block">
                         <img 
                         className="h-[44px] w-auto"
-                        src="img/appleD.png" 
+                        src={process.env.PUBLIC_URL + '/img/appleD.png'} 
                         />
                     </a>
                 </div>
 
 			</div>
 			<div>
-				<img src="img/showD.png" />
+				<img 
+                src={process.env.PUBLIC_URL + '/img/showD.png'} 
+                alt=""
+                />
 			</div>
 		</div>
 	</section>)

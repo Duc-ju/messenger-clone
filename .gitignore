@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/emulators
 /.pnp
 .pnp.js
 
