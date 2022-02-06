@@ -69,14 +69,14 @@ function RoomList() {
               {choosers.length === 0 && (
                   <img
                     src={getPhotoURL()}
-                    href=""
+                    alt=""
                     className="w-[56px] h-[56px] rounded-full"
                   />
                 )}
               {choosers.length === 1 && (
                   <img
                     src={getPhotoURL(choosers[0])}
-                    href=""
+                    alt=""
                     className="w-[56px] h-[56px] rounded-full"
                   />
                 )}
@@ -85,7 +85,7 @@ function RoomList() {
                     <div className="absolute right-0 top-0">
                       <img
                         src={getPhotoURL(choosers[0])}
-                        href={choosers[0].displayName
+                        alt={choosers[0].displayName
                           ?.charAt(0)
                           .toUpperCase()}
                         className="w-[38px] h-[38px] rounded-full"
@@ -94,7 +94,7 @@ function RoomList() {
                     <div className="absolute left-0 bottom-0">
                       <img
                         src={getPhotoURL(choosers[1])}
-                        href={choosers[1].displayName
+                        alt={choosers[1].displayName
                           ?.charAt(0)
                           .toUpperCase()}
                         className="w-[38px] h-[38px] rounded-full border-2 border-white"
@@ -132,14 +132,14 @@ function RoomList() {
                 {room.members.length === 2 && (
                   <img
                     src={getPhotoURL(room.members.filter(member => member.uid!==user.uid)[0])}
-                    href=""
+                    alt=""
                     className="w-[56px] h-[56px] rounded-full"
                   />
                 )}
                 {room.members.length > 2 && room.photoURL && (
                   <img
                     src={room.photoURL}
-                    href=""
+                    alt=""
                     className="w-[56px] h-[56px] rounded-full"
                   />
                 )}
@@ -148,7 +148,7 @@ function RoomList() {
                     <div className="absolute right-0 top-0">
                       <img
                         src={getPhotoURL(room.members[0])}
-                        href={room.members[0].displayName
+                        alt={room.members[0].displayName
                           ?.charAt(0)
                           .toUpperCase()}
                         className="w-[38px] h-[38px] rounded-full"
@@ -157,7 +157,7 @@ function RoomList() {
                     <div className="absolute left-0 bottom-0">
                       <img
                         src={getPhotoURL(room.members[1])}
-                        href={room.members[1].displayName
+                        alt={room.members[1].displayName
                           ?.charAt(0)
                           .toUpperCase()}
                         className="w-[38px] h-[38px] rounded-full border-2 border-white"

@@ -3,7 +3,7 @@ import { AppContext } from "../../../context/AppProvider";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
 
 function CreContent() {
-  const { searchRoom, choosers } = useContext(AppContext);
+  const { choosers } = useContext(AppContext);
 
   return (
     <div className="mt-[56px] text-center">
