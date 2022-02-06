@@ -10,9 +10,11 @@ function Control(){
         <RoomList />
         <div className="z-50 border-t border-r fixed bottom-0 bg-white w-[28%]">
             <div className="text-center">
-                <a href="" className="inline-block p-4 font-semibold">
-                    <FontAwesomeIcon className="mr-[8px]" icon={faDownload} />
-                    Cài đặt ứng dụng Messenger
+                <a href="https://www.messenger.com/desktop/" className="inline-block p-2 font-semibold w-full">
+                    <div className="p-2 hover:bg-[#eee] rounded-[8px] w-full">
+                        <FontAwesomeIcon className="mr-[8px]" icon={faDownload} />
+                        Cài đặt ứng dụng Messenger
+                    </div>
                 </a>
             </div>
         </div>

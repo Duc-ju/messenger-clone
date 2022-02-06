@@ -1,5 +1,7 @@
 
 import { useEffect, useRef, memo } from 'react'
+import { auth } from '../../../firebase/config'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
@@ -7,7 +9,7 @@ function PopUp({ handleClosePopUp }){
     const popUpElement = useRef()
 
     const handleLogout = ()=>{
-
+        auth.signOut()
     }
 
     useEffect(() =>{
@@ -24,7 +26,7 @@ function PopUp({ handleClosePopUp }){
     },[])
     return(
         <div 
-        className="absolute bg-white p-[6px] rounded-lg shadow-2xl border top-[68px] z-[100] flex flex-col"
+        className="absolute bg-white p-[6px] rounded-lg shadow-2xl border top-[68px] z-[100] flex flex-col min-w-[282px]"
         ref={popUpElement}
         >
             <div className="flex items-center p-[8px] hover:bg-[#eee] rounded-md cursor-pointer w-max min-w-full">

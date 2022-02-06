@@ -1,8 +1,62 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext, useMemo } from "react";
+import { getPhotoURL } from "../../../logic/getPhotoURL";
+import useFirestore from "../../../hooks/useFirestore";
+import { AppContext } from "../../../context/AppProvider";
+import { AuthContext } from "../../../context/AuthProvider";
+
+function messageReducer(messages, uid) {
+  if (!messages.length) return [];
+  let newMess = [];
+  newMess = [
+    {
+      id: messages[0].id,
+      uid: messages[0].uid,
+      photoURL: messages[0].photoURL,
+      isOwnMess: messages[0].uid === uid,
+      createAt: messages[0].createAt,
+      contents: [messages[0].content],
+    }
+  ];
+  let j = 1;
+  for (let i = 1; i < messages.length; i++) {
+    if (messages[i].uid === newMess[j - 1].uid) {
+      newMess[j - 1].contents = [
+        ...newMess[j - 1].contents,
+        messages[i].content,
+      ];
+    } else {
+      newMess = [
+        ...newMess,
+        {
+          id: messages[i].id,
+          uid: messages[i].uid,
+          photoURL: messages[i].photoURL,
+          isOwnMess: messages[i].uid === uid,
+          createAt: messages[i].createAt,
+          contents: [messages[i].content],
+        },
+      ];
+      j++;
+    }
+  }
+  return newMess;
+}
 
 function Content() {
   const [height, setHeight] = useState(window.innerHeight - 139);
   const contentElement = useRef();
+  const { currentRoom } = useContext(AppContext);
+  const { user } = useContext(AuthContext);
+
+  const messageCondition = useMemo(() => {
+    return {
+      fieldName: "rid",
+      operator: "==",
+      compareValue: currentRoom?.id,
+    };
+  }, [currentRoom]);
+  const messages = useFirestore("messages", messageCondition);
+  
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - 139);
@@ -13,9 +67,10 @@ function Content() {
     };
   }, []);
 
-  useEffect(()=>{
-    contentElement.current.scrollTop = contentElement.current.scrollHeight-contentElement.current.clientHeight
-  },[])
+  useEffect(() => {
+    contentElement.current.scrollTop =
+      contentElement.current.scrollHeight - contentElement.current.clientHeight;
+  }, [messages]);
 
   return (
     <div className="mt-[76px] container">
@@ -26,285 +81,86 @@ function Content() {
           height: `${height}px`,
         }}
       >
-        <div className="relative z-10">
-          <div className="flex">
-            <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
-              <img
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-1/p100x100/240272910_2907912749460767_1922664637204799808_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=NDUWRXMETbAAX8o9_xq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fhan15-2.fna&oh=00_AT-hgjVAdygHVnQ5hXhuLfYCDISfXNaouQBw4rJyHjICwA&oe=61F55248"
-                alt=""
-                className="w-[28px] h-[28px] rounded-full"
-              />
-            </div>
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
+        {messageReducer(messages, user.uid).map((message) => {
+          if (!message.isOwnMess) {
+            return (
+              <div key={message.id} className="relative z-10">
+                <div className="flex">
+                  <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
+                    <img
+                      src={getPhotoURL(message)}
+                      alt=""
+                      className="w-[28px] h-[28px] rounded-full"
+                    />
+                  </div>
+                  <ul className="text-justify w-full">
+                    {message.contents.map((content, index) => {
+                      const style = {};
+                      if (message.contents.length === 1) {
+                        style.borderTopLeftRadius = "18px";
+                        style.borderBottomLeftRadius = "18px";
+                      }
+                      if (message.contents.length >= 2) {
+                        if (index === 0) style.borderTopLeftRadius = "18px";
+                        if (index === message.contents.length - 1)
+                          style.borderBottomLeftRadius = "18px";
+                      }
+                      return (
+                        <li key={index} className="mb-[2px]">
+                          <div className="max-w-[65%]">
+                            <p
+                              className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-r-[18px] break-words max-w-fit"
+                              style={style}
+                            >
+                              {content}
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
+                <div className="h-[7px] invisible"></div>
+              </div>
+            );
+          } else {
+            return (
+              <div key={message.id}>
+                <div className="">
+                  <ul className="text-justify w-full">
+                  {message.contents.map((content, index) => {
+                      const style = {};
+                      if (message.contents.length === 1) {
+                        style.borderTopRightRadius = "18px";
+                        style.borderBottomRightRadius = "18px";
+                      }
+                      if (message.contents.length >= 2) {
+                        if (index === 0) style.borderTopRightRadius = "18px";
+                        if (index === message.contents.length - 1)
+                          style.borderBottomRightRadius = "18px";
+                      }
+                      return (
+                        <li key={index} className="mb-[2px]">
+                          <div className="max-w-[65%] mr-0 ml-auto">
+                            <p 
+                            className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-l-[18px] break-words max-w-fit"
+                            style={style}
+                            >
+                              {content}
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                    
+                    
+                  </ul>
                 </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div>
-          <div className="">
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div className="relative z-10">
-          <div className="flex">
-            <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
-              <img
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-1/p100x100/240272910_2907912749460767_1922664637204799808_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=NDUWRXMETbAAX8o9_xq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fhan15-2.fna&oh=00_AT-hgjVAdygHVnQ5hXhuLfYCDISfXNaouQBw4rJyHjICwA&oe=61F55248"
-                alt=""
-                className="w-[28px] h-[28px] rounded-full"
-              />
-            </div>
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div>
-          <div className="">
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div className="relative z-10">
-          <div className="flex">
-            <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
-              <img
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-1/p100x100/240272910_2907912749460767_1922664637204799808_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=NDUWRXMETbAAX8o9_xq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fhan15-2.fna&oh=00_AT-hgjVAdygHVnQ5hXhuLfYCDISfXNaouQBw4rJyHjICwA&oe=61F55248"
-                alt=""
-                className="w-[28px] h-[28px] rounded-full"
-              />
-            </div>
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div>
-          <div className="">
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div className="relative z-10">
-          <div className="flex">
-            <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
-              <img
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-1/p100x100/240272910_2907912749460767_1922664637204799808_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=NDUWRXMETbAAX8o9_xq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fhan15-2.fna&oh=00_AT-hgjVAdygHVnQ5hXhuLfYCDISfXNaouQBw4rJyHjICwA&oe=61F55248"
-                alt=""
-                className="w-[28px] h-[28px] rounded-full"
-              />
-            </div>
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div>
-          <div className="">
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div className="relative z-10">
-          <div className="flex">
-            <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
-              <img
-                src="https://scontent.fhan15-2.fna.fbcdn.net/v/t39.30808-1/p100x100/240272910_2907912749460767_1922664637204799808_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=7206a8&_nc_ohc=NDUWRXMETbAAX8o9_xq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.fhan15-2.fna&oh=00_AT-hgjVAdygHVnQ5hXhuLfYCDISfXNaouQBw4rJyHjICwA&oe=61F55248"
-                alt=""
-                className="w-[28px] h-[28px] rounded-full"
-              />
-            </div>
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%]">
-                  <p className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
-
-        <div>
-          <div className="">
-            <ul className="text-justify w-full">
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-              <li className="mb-[2px]">
-                <div className="max-w-[65%] mr-0 ml-auto">
-                  <p className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-[18px] break-words max-w-fit">
-                    1 kiểu ngành khá nhiều tiền :v 1 kiểu ngành khá nhiều tiền
-                    :v 1 kiểu ngành khá nhiều tiền :v
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="h-[7px] invisible"></div>
+                <div className="h-[7px] invisible"></div>
+              </div>
+            );
+          }
+        })}
       </div>
     </div>
   );

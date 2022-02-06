@@ -25,20 +25,20 @@ function Body({ handleLogin }){
                     <a href="" className="mr-[0.75rem] inline-block">
                         <img 
                         className="h-[44px] w-auto" 
-                        src="https://static.xx.fbcdn.net/rsrc.php/v3/yg/r/puWREWrr5nk.png" 
+                        src="img/microsoftD.png" 
                         />
                     </a>
                     <a href="" className="inline-block">
                         <img 
                         className="h-[44px] w-auto"
-                        src="https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/_-Ce3epqZVV.png" 
+                        src="img/appleD.png" 
                         />
                     </a>
                 </div>
 
 			</div>
 			<div>
-				<img src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.8562-6/120973513_338186077283942_8148888802958728934_n.png?_nc_cat=1&ccb=1-5&_nc_sid=6825c5&_nc_ohc=8wIIuYN0jIQAX-7BV4M&_nc_ht=scontent.fhan15-1.fna&oh=00_AT-GMgdNnV0OgOEXpbrA_BH5cDJiPVsxxkW1MRsPVUz5bA&oe=61F4CBA7" />
+				<img src="img/showD.png" />
 			</div>
 		</div>
 	</section>)
