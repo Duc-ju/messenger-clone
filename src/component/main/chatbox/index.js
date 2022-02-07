@@ -9,7 +9,7 @@ import { AppContext } from '../../../context/AppProvider'
 
 function ChatBox(){
 
-    const { isOpenCreateRoom, currentRoom, choosers } = useContext(AppContext)
+    const { isOpenCreateRoom, currentRoom, choosers, searchRoom } = useContext(AppContext)
 
     return(
         <div>
@@ -20,7 +20,8 @@ function ChatBox(){
             </>}
             {isOpenCreateRoom&&<>
                 <CreaHeader />
-                <CreContent />
+                {searchRoom?<Content />:
+                <CreContent />}
                 {choosers.length>0&&<Control />}
             </>}
         </div>

@@ -45,19 +45,22 @@ function messageReducer(messages, uid) {
 }
 
 function Content() {
+
   const [height, setHeight] = useState(window.innerHeight - 139);
   const contentElement = useRef();
-  const { currentRoom } = useContext(AppContext);
+  const { currentRoom, searchRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
+  const room = currentRoom||searchRoom
   const messageCondition = useMemo(() => {
     return {
       fieldName: "rid",
       operator: "==",
-      compareValue: currentRoom?.id,
-    };
-  }, [currentRoom]);
+      compareValue: room.id,
+    }
+  }, [room]);
   const messages = useFirestore("messages", messageCondition);
+
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - 139);
@@ -82,12 +85,12 @@ function Content() {
           height: `${height}px`,
         }}
       >
-        <div className="flex flex-col items-center py-[16px] px-[32px] relative z-[1000]">
+        <div className="flex flex-col items-center py-[16px] px-[32px] relative z-[500]">
           <div>
-            {currentRoom.members.length === 2 && (
+            {room.members.length === 2 && (
               <img
                 src={getPhotoURL(
-                  currentRoom.members.filter(
+                  room.members.filter(
                     (member) => member.uid !== user.uid
                   )[0]
                 )}
@@ -95,19 +98,21 @@ function Content() {
                 className="w-[56px] h-[56px] rounded-full"
               />
             )}
-            {currentRoom.members.length > 2 && currentRoom.photoURL && (
+            {room.members.length > 2 && room.photoURL && (
               <img
-                src={currentRoom.photoURL}
+                src={room.photoURL}
                 href=""
                 className="w-[56px] h-[56px] rounded-full"
               />
             )}
-            {currentRoom.members.length > 2 && !currentRoom.photoURL && (
+            {room.members.length > 2 && !room.photoURL && (
               <div className="relative w-[56px] h-[56px]">
                 <div className="absolute right-0 top-0">
                   <img
-                    src={getPhotoURL(currentRoom.members[0])}
-                    href={currentRoom.members[0].displayName
+                    src={getPhotoURL(room.members.filter(
+                      (member) => member.uid !== user.uid
+                    )[0])}
+                    href={room.members[0].displayName
                       ?.charAt(0)
                       .toUpperCase()}
                     className="w-[38px] h-[38px] rounded-full"
@@ -115,8 +120,10 @@ function Content() {
                 </div>
                 <div className="absolute left-0 bottom-0">
                   <img
-                    src={getPhotoURL(currentRoom.members[1])}
-                    href={currentRoom.members[1].displayName
+                    src={getPhotoURL(room.members.filter(
+                      (member) => member.uid !== user.uid
+                    )[1])}
+                    href={room.members[1].displayName
                       ?.charAt(0)
                       .toUpperCase()}
                     className="w-[38px] h-[38px] rounded-full border-2 border-white"
@@ -126,7 +133,7 @@ function Content() {
             )}
           </div>
           <h2 className="text-[1.0625rem] font-semibold leading-[1.765]">
-            {getRoomName(currentRoom,user.uid)}
+            {getRoomName(room,user.uid)}
           </h2>
           <p className="text-[.8125rem]">Cùng bắt đầu cuộc trò chuyện</p>
         </div>

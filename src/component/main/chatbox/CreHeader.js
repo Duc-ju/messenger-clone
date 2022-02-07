@@ -72,7 +72,8 @@ function CreaHeader() {
         if(count===room.members.length) return true;
         return false;
       })
-      if(matchRoom.length===1) setSearchRoom(matchRoom)
+      console.log({matchRoom:matchRoom});
+      if(matchRoom.length===1) setSearchRoom(matchRoom[0])
       else setSearchRoom()
       return newChoosers
     });
@@ -96,7 +97,7 @@ function CreaHeader() {
         if(count===room.members.length) return true;
         return false;
       })
-      if(matchRoom.length===1) setSearchRoom(matchRoom)
+      if(matchRoom.length===1) setSearchRoom(matchRoom[0])
       else setSearchRoom()
       return newChoosers
     })
@@ -104,10 +105,6 @@ function CreaHeader() {
 
   const handleFocusIn = () => {
     setIsDisplayResult(true);
-  }
-
-  const handleFocusOut = () => {
-    setIsDisplayResult(false);
   }
 
   return (

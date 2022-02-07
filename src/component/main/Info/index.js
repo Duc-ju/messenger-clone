@@ -50,8 +50,8 @@ function Info(){
                   <div className="relative w-[80px] h-[80px]">
                     <div className="absolute right-0 top-0">
                       <img
-                        src={getPhotoURL(currentRoom.members[0])}
-                        href={currentRoom.members[0].displayName
+                        src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[0])}
+                        href={currentRoom.members.filter(member => member.uid!==user.uid)[0].displayName
                           ?.charAt(0)
                           .toUpperCase()}
                         className="w-[54px] h-[54px] rounded-full"
@@ -59,17 +59,17 @@ function Info(){
                     </div>
                     <div className="absolute left-0 bottom-0">
                       <img
-                        src={getPhotoURL(currentRoom.members[1])}
-                        href={currentRoom.members[1].displayName
+                        src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[1])}
+                        href={currentRoom.members.filter(member => member.uid!==user.uid)[1].displayName
                           ?.charAt(0)
                           .toUpperCase()}
-                        className="w-[38px] h-[38px] rounded-full border-2 border-white"
+                        className="w-[54px] h-[54px] rounded-full border-2 border-white"
                       />
                     </div>
                   </div>
                 )}
                 </div>
-                <h3 className="text-[1.0625rem] font-semibold">{getRoomName(currentRoom)}</h3>
+                <h3 className="text-[1.0625rem] font-semibold">{getRoomName(currentRoom,user.uid)}</h3>
                 <p className="text-[.8125rem] font-normal text-[#65676B]">Đang hoạt động</p>
             </div>
             <div className="py-[20px]">

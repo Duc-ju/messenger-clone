@@ -147,7 +147,7 @@ function RoomList() {
                   <div className="relative w-[56px] h-[56px]">
                     <div className="absolute right-0 top-0">
                       <img
-                        src={getPhotoURL(room.members[0])}
+                        src={getPhotoURL(room.members.filter(member => member.uid!==user.uid)[0])}
                         alt={room.members[0].displayName
                           ?.charAt(0)
                           .toUpperCase()}
@@ -156,7 +156,7 @@ function RoomList() {
                     </div>
                     <div className="absolute left-0 bottom-0">
                       <img
-                        src={getPhotoURL(room.members[1])}
+                        src={getPhotoURL(room.members.filter(member => member.uid!==user.uid)[1])}
                         alt={room.members[1].displayName
                           ?.charAt(0)
                           .toUpperCase()}

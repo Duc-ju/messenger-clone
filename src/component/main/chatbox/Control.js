@@ -16,8 +16,8 @@ import {
 function Control() {
   const [message, setMessage] = useState("");
   const [isTyped, setIsTyped] = useState(false);
-  const [isPending, setIsPending] = useState(false);
   const inputElement = useRef();
+
   const {
     currentRoom,
     openInfo,
@@ -25,23 +25,41 @@ function Control() {
     isOpenCreateRoom,
     choosers,
     setChoosers,
-    rooms,
     setCurrentRoom,
     setIsOpenCreateRoom,
+    setMessagePending,
+    searchRoom
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
   const handleButtonSubmit = () => {
     if (isOpenCreateRoom) {
       if (message.replace(/\s/g, "").length) {
-        addDocument("rooms", {
-          members: [...choosers, user].map((member) => member.uid),
-        });
-        setIsOpenCreateRoom(false)
-        setCurrentRoom()
-        setIsPending(true);
-        setChoosers([])
-        setOpenInfo(true)
+        if(!searchRoom){
+          addDocument("rooms", {
+            members: [...choosers, user].map((member) => member.uid),
+          });
+          setIsOpenCreateRoom(false)
+          setCurrentRoom()
+          setChoosers([])
+          setOpenInfo(true)
+          console.log('set pending: '+message);
+          setMessagePending(message);
+        }
+        else{
+          addDocument("messages", {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            rid: searchRoom.id,
+            content: message,
+          });
+          setCurrentRoom(searchRoom)
+          setIsOpenCreateRoom(false)
+          setChoosers([])
+          setOpenInfo(true)
+          setMessage("");
+        }
       }
     } else {
       if (message.replace(/\s/g, "").length) {
@@ -57,20 +75,6 @@ function Control() {
     }
     setIsTyped(false);
   };
-  useEffect(() => {
-    if(isPending){
-      setIsOpenCreateRoom(false);
-      setCurrentRoom(rooms[0]);
-      addDocument("messages", {
-        uid: user.uid,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        rid: rooms[0].id,
-        content: message,
-      });
-      setIsPending(false);
-    }
-  }, [rooms]);
 
   const handleSubmit = (e) => {
     if (e.code === "Enter") {
@@ -125,6 +129,7 @@ function Control() {
             ref={inputElement}
             onChange={(e) => handleChange(e)}
             onKeyUp={(e) => handleSubmit(e)}
+            autoFocus
             value={message}
             className="w-full pt-[7px] pl-[12px] pr-[6px] pb-[9px] text-[0.9375rem] rounded-[50px] outline-none bg-[#eee]"
           />
