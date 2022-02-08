@@ -179,7 +179,7 @@ function RoomList() {
                 </span>
               </div>
               <div className="col-span-1 flex items-center justify-end">
-                <FontAwesomeIcon icon={faBellSlash} />
+                {/* <FontAwesomeIcon icon={faBellSlash} /> */}
               </div>
             </div>
           </li>

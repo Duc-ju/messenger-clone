@@ -41,6 +41,7 @@ function AuthProvider({ children }) {
   const [openInfo, setOpenInfo] = useState(false);
   const [searchRoom, setSearchRoom] = useState();
   const [messagePending, setMessagePending] = useState();
+  const [messageServerIsChanged, setMessageServerIsChanged] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -51,7 +52,37 @@ function AuthProvider({ children }) {
       compareValue: user.uid,
     };
   }, [user.uid]);
+  const messageServerConditions = useMemo(() => {
+    return {
+      fieldName: "rid",
+      operator: "in",
+      compareValue: rooms.map((room) => room.rid),
+    };
+  });
+
   useEffect(() => {
+    let collectionRef = db.collection("messages");
+    if (
+      messageServerConditions &&
+      messageServerConditions.compareValue &&
+      messageServerConditions.compareValue.length > 0
+    ) {
+      collectionRef = collectionRef.where(
+        messageServerConditions.fieldName,
+        messageServerConditions.operator,
+        messageServerConditions.compareValue
+      );
+    }
+
+    const unsubcribe = collectionRef.onSnapshot(() => {
+      setMessageServerIsChanged(true);
+    });
+
+    return unsubcribe;
+  },[]);
+
+  useEffect(() => {
+    setMessageServerIsChanged(false);
     let collectionRef = db.collection("rooms").orderBy("createAt", "desc");
     if (
       roomCondition &&
@@ -77,13 +108,14 @@ function AuthProvider({ children }) {
         });
         await fetchLastestMessage(roomRef).then((lastestMessage) => {
           roomRef.lastestMessage = lastestMessage[0];
-        })
+        });
         return roomRef;
       });
       Promise.all(promises).then((rooms) => {
+        rooms.sort((a, b) => {
+          return b.lastestMessage.createAt.seconds - a.lastestMessage.createAt.seconds;
+        });
         setRooms(rooms);
-        console.log({rooms:rooms});
-
         if (messagePending) {
           setIsOpenCreateRoom(false);
           setCurrentRoom(rooms[0]);
@@ -98,7 +130,7 @@ function AuthProvider({ children }) {
       });
     });
     return unsubcribe;
-  }, [roomCondition, messagePending, user]);
+  }, [roomCondition, messagePending, user, messageServerIsChanged]);
 
   return (
     <AppContext.Provider

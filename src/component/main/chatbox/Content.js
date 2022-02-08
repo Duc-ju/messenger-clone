@@ -7,24 +7,34 @@ import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 
 function messageReducer(messages, uid) {
-  if (!messages.length) return [];
+  messages = messages.filter(message => message&&message.createAt);
+  if (!messages||!messages.length)return [];
   let newMess = [];
   newMess = [
     {
       id: messages[0].id,
       uid: messages[0].uid,
+      displayName: messages[0].displayName,
       photoURL: messages[0].photoURL,
       isOwnMess: messages[0].uid === uid,
       createAt: messages[0].createAt,
-      contents: [messages[0].content],
+      contents: [{
+        id: messages[0].id,
+        message: messages[0].content,
+        createAt: messages[0].createAt
+      }],
     },
   ];
   let j = 1;
   for (let i = 1; i < messages.length; i++) {
-    if (messages[i].uid === newMess[j - 1].uid) {
+    if (messages[i].uid === newMess[j - 1].uid && Math.abs(messages[i].createAt.seconds-newMess[j - 1].createAt.seconds)<3600) {
       newMess[j - 1].contents = [
         ...newMess[j - 1].contents,
-        messages[i].content,
+        {
+          id: messages[i].id,
+          message: messages[i].content,
+          createAt: messages[i].createAt
+        }
       ];
     } else {
       newMess = [
@@ -32,10 +42,15 @@ function messageReducer(messages, uid) {
         {
           id: messages[i].id,
           uid: messages[i].uid,
+          displayName: messages[i].displayName,
           photoURL: messages[i].photoURL,
           isOwnMess: messages[i].uid === uid,
           createAt: messages[i].createAt,
-          contents: [messages[i].content],
+          contents: [{
+            id: messages[i].id,
+            message: messages[i].content,
+            createAt: messages[i].createAt
+          }],
         },
       ];
       j++;
@@ -51,7 +66,7 @@ function Content() {
   const { currentRoom, searchRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
-  const room = currentRoom||searchRoom
+  const room = currentRoom || searchRoom
   const messageCondition = useMemo(() => {
     return {
       fieldName: "rid",
@@ -134,7 +149,7 @@ function Content() {
             )}
           </div>
           <h2 className="text-[1.0625rem] font-semibold leading-[1.765]">
-            {getRoomName(room,user.uid)}
+            {getRoomName(room, user.uid)}
           </h2>
           <p className="text-[.8125rem]">Cùng bắt đầu cuộc trò chuyện</p>
         </div>
@@ -143,7 +158,8 @@ function Content() {
             if (!message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
-                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold">{convertTime(message.createAt.seconds)}</div>
+                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px]">{convertTime(message.createAt.seconds)}</div>
+                  {room.members.length > 2 && <div className="text-[.6875rem] pb-[2px] leading-[1.4545] font-semibold pl-[62px]">{message.displayName}</div>}
                   <div className="flex">
                     <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
                       <img
@@ -165,14 +181,17 @@ function Content() {
                             style.borderBottomLeftRadius = "18px";
                         }
                         return (
-                          <li key={index} className="mb-[2px]">
-                            <div className="max-w-[65%]">
-                              <p
-                                className="bg-[#eee] py-[8px] px-[12px] text-[0.9375rem] rounded-r-[18px] break-words max-w-fit"
+                          <li key={content.id} className="mb-[2px]">
+                            <div className="max-w-[65%] relative z-[0]">
+                              <div
+                                className="bg-[#eee] relative message py-[8px] px-[12px] text-[0.9375rem] rounded-r-[18px] break-words max-w-fit"
                                 style={style}
                               >
-                                {content}
-                              </p>
+                                <span>{content.message}</span>
+                                <div className="absolute top-[0] right-full w-fit message-time invisible min-w-max z-10">
+                                  <div className="relative leading-[1.2727rem] text-[.6875rem] bg-black opacity-[0.7] text-white py-[6px] px-[10px] rounded-[10px] h-full w-fit">{convertTime(content.createAt.seconds)}</div>
+                                </div>
+                              </div>
                             </div>
                           </li>
                         );
@@ -185,6 +204,7 @@ function Content() {
             } else {
               return (
                 <div key={message.id}>
+                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px] relative z-[10]">{convertTime(message.createAt.seconds)}</div>
                   <div className="">
                     <ul className="text-justify w-full">
                       {message.contents.map((content, index) => {
@@ -199,15 +219,19 @@ function Content() {
                             style.borderBottomRightRadius = "18px";
                         }
                         return (
-                          <li key={index} className="mb-[2px]">
+                          <li key={content.id} className="mb-[2px] message">
                             <div className="max-w-[65%] mr-0 ml-auto">
-                              <p
-                                className="bg-black text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-l-[18px] break-words max-w-fit"
+                              <div
+                                className="bg-black relative text-white mr-[14px] ml-auto py-[8px] px-[12px] text-[0.9375rem] rounded-l-[18px] break-words max-w-fit"
                                 style={style}
                               >
-                                {content}
-                              </p>
+                                <span>{content.message}</span>
+                                <div className="absolute top-[0] right-full w-fit message-time invisible min-w-max z-10">
+                                  <div className="relative leading-[1.2727rem] text-[.6875rem] bg-black opacity-[0.7] text-white py-[6px] px-[10px] rounded-[10px] h-full w-fit">{convertTime(content.createAt.seconds)}</div>
+                                </div>
+                              </div>
                             </div>
+
                           </li>
                         );
                       })}
