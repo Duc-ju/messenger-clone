@@ -61,6 +61,7 @@ function Content() {
   }, [room]);
   const messages = useFirestore("messages", messageCondition);
 
+
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - 139);
@@ -142,7 +143,7 @@ function Content() {
             if (!message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
-                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold">{convertTime(message.createAt)}</div>
+                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold">{convertTime(message.createAt.seconds)}</div>
                   <div className="flex">
                     <div className="ml-[14px] mr-[8px] flex items-end w-[32px]">
                       <img

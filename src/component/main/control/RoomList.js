@@ -4,6 +4,8 @@ import { AuthContext } from "../../../context/AuthProvider";
 import { getRoomName } from "../../../logic/getRoomName";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { getShortString } from "../../../logic/getShortString";
+import { getRangeOfTimeToCurrent } from "../../../logic/getRangeOfTimeToCurrent";
+import { getUserName } from "../../../logic/getUserName";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBellSlash, faTimes } from "@fortawesome/free-solid-svg-icons";
 import "./scrollBar.css";
@@ -170,9 +172,11 @@ function RoomList() {
                 <h3 className="text-[.9375rem]">
                   {getRoomName(room, user.uid)}
                 </h3>
-                <span className="text-[.8125rem]">Xin chào hôm nay...</span>
-                <span className="mx-[6px]">·</span>
-                <span className="text-[.8125rem]">57 phút</span>
+                <span>
+                  <span className="text-[.8125rem]">{(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,20)}</span>
+                  <span className="mx-[6px]">·</span>
+                  <span className="text-[.8125rem]">{getRangeOfTimeToCurrent(room.lastestMessage.createAt.seconds)}</span>
+                </span>
               </div>
               <div className="col-span-1 flex items-center justify-end">
                 <FontAwesomeIcon icon={faBellSlash} />

@@ -46,7 +46,7 @@ function CreaHeader() {
   };
   useEffect(() =>{
     const handleClick = ({ target })=>{
-        if(!resultElement.current.contains(target)&&!inputElement.current.contains(target)){
+        if(!resultElement.current?.contains(target)&&!inputElement.current?.contains(target)){
           setIsDisplayResult(false)
         }
     }

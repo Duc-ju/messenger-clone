@@ -19,6 +19,19 @@ async function fetchRoomMembers(room) {
     });
 }
 
+async function fetchLastestMessage(room) {
+  if (!room) return;
+  return db
+    .collection("messages")
+    .where("rid", "==", room.id)
+    .orderBy("createAt", "desc")
+    .limit(1)
+    .get()
+    .then((snapshot) => {
+      return snapshot.docs.map((doc) => doc.data());
+    });
+}
+
 export const AppContext = React.createContext();
 function AuthProvider({ children }) {
   const [rooms, setRooms] = useState([]);
@@ -62,11 +75,14 @@ function AuthProvider({ children }) {
         await fetchRoomMembers(roomRef).then((members) => {
           roomRef.members = members;
         });
+        await fetchLastestMessage(roomRef).then((lastestMessage) => {
+          roomRef.lastestMessage = lastestMessage[0];
+        })
         return roomRef;
       });
       Promise.all(promises).then((rooms) => {
-        console.log("read room list");
         setRooms(rooms);
+        console.log({rooms:rooms});
 
         if (messagePending) {
           setIsOpenCreateRoom(false);

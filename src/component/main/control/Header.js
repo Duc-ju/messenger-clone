@@ -1,18 +1,19 @@
 import { useState, useCallback, useContext } from 'react'
 import { AuthContext } from '../../../context/AuthProvider'
 import { AppContext } from '../../../context/AppProvider'
+import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEllipsisH, faVideo , faEdit, faSearch } from '@fortawesome/free-solid-svg-icons'
 import PopUp from "./PopUp"
 
 function Header(){
     const [displayPopUp, setDisplayPopUp] = useState(false)
-    const { user:{photoURL} } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
     const { setIsOpenCreateRoom, setOpenInfo, rooms, setCurrentRoom } = useContext(AppContext)
 
     const handleClosePopUp = useCallback(()=>{
         setDisplayPopUp(false)
-    })
+    },[])
 
     const handleToggerCreateRoom = () => {
         setIsOpenCreateRoom(old => {
@@ -41,7 +42,8 @@ function Header(){
             <div className="flex justify-between">
                 <div className="pt-[20px] px-[16px] pb-[12px] flex items-center">
                     <img 
-                    src={photoURL}
+                    src={getPhotoURL(user)}
+                    alt=""
                     className="w-[36px] h-[36px] rounded-full"
                     />
                     <h3 className="font-bold text-2xl ml-3">Chat</h3>
