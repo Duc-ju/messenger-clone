@@ -45,3 +45,7 @@
   visibility: visible;
 }
 
+.message-line:hover .reaction-icon {
+  visibility: visible;
+}
+

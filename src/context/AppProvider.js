@@ -115,7 +115,6 @@ function AuthProvider({ children }) {
         rooms.sort((a, b) => {
           return b.lastestMessage.createAt.seconds - a.lastestMessage.createAt.seconds;
         });
-        setRooms(rooms);
         if (messagePending) {
           setIsOpenCreateRoom(false);
           setCurrentRoom(rooms[0]);
@@ -125,7 +124,16 @@ function AuthProvider({ children }) {
             photoURL: user.photoURL,
             rid: rooms[0].id,
             content: messagePending,
+            love: [],
+            haha: [],
+            wow: [],
+            sad: [],
+            angry: [],
+            like: []
           });
+        }
+        else{
+          setRooms(rooms);
         }
       });
     });

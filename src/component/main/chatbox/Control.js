@@ -28,36 +28,41 @@ function Control() {
     setCurrentRoom,
     setIsOpenCreateRoom,
     setMessagePending,
-    searchRoom
+    searchRoom,
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
   const handleButtonSubmit = () => {
     if (isOpenCreateRoom) {
       if (message.replace(/\s/g, "").length) {
-        if(!searchRoom){
+        if (!searchRoom) {
           addDocument("rooms", {
             members: [...choosers, user].map((member) => member.uid),
           });
-          setIsOpenCreateRoom(false)
-          setCurrentRoom()
-          setChoosers([])
-          setOpenInfo(true)
-          console.log('set pending: '+message);
+          setIsOpenCreateRoom(false);
+          setCurrentRoom();
+          setChoosers([]);
+          setOpenInfo(true);
+          console.log("set pending: " + message);
           setMessagePending(message);
-        }
-        else{
+        } else {
           addDocument("messages", {
             uid: user.uid,
             displayName: user.displayName,
             photoURL: user.photoURL,
             rid: searchRoom.id,
             content: message,
+            love: [],
+            haha: [],
+            wow: [],
+            sad: [],
+            angry: [],
+            like: [],
           });
-          setCurrentRoom(searchRoom)
-          setIsOpenCreateRoom(false)
-          setChoosers([])
-          setOpenInfo(true)
+          setCurrentRoom(searchRoom);
+          setIsOpenCreateRoom(false);
+          setChoosers([]);
+          setOpenInfo(true);
           setMessage("");
         }
       }
@@ -69,6 +74,12 @@ function Control() {
           photoURL: user.photoURL,
           rid: currentRoom.id,
           content: message,
+          love: [],
+          haha: [],
+          wow: [],
+          sad: [],
+          angry: [],
+          like: [],
         });
         setMessage("");
       }

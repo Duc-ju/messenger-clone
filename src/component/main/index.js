@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { AppContext } from '../../context/AppProvider'
+import ReactionList from './ReactionList'
 import Control from './Control'
 import ChatBox from './ChatBox'
 import Info from './Info'
@@ -28,6 +29,7 @@ function Main() {
                 {currentRoom&&openInfo&&<Info />}
             </div>
         </div>
+        {/* <ReactionList /> */}
     </div>)
 
 }
