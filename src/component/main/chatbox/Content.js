@@ -3,97 +3,19 @@ import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { getRoomName } from "../../../logic/getRoomName";
 import { countReaction } from "../../../logic/countReaction";
 import { convertTime } from "../../../logic/convertTime";
+import { messageReducer } from "../../../logic/messageReducer"
 import useFirestore from "../../../hooks/useFirestore";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-solid-svg-icons";
 
-function messageReducer(messages, room, uid) {
-  if(!room) return []
-  messages = messages.filter((message) => message && message.createAt);
-  if (!messages || !messages.length) return [];
-  let newMess = [];
-  newMess = [
-    {
-      id: messages[0].id,
-      uid: messages[0].uid,
-      displayName: messages[0].displayName,
-      photoURL: messages[0].photoURL,
-      isOwnMess: messages[0].uid === uid,
-      createAt: messages[0].createAt,
-      contents: [
-        {
-          id: messages[0].id,
-          message: messages[0].content,
-          createAt: messages[0].createAt,
-          love: messages[0].love.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          haha: messages[0].haha.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          wow: messages[0].wow.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          sad: messages[0].sad.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          angry: messages[0].angry.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          like: messages[0].like.map(uid => room.members.filter(m => m.uid===uid)[0]),
-        },
-      ],
-    },
-  ];
-  let j = 1;
-  for (let i = 1; i < messages.length; i++) {
-    if (
-      messages[i].uid === newMess[j - 1].uid &&
-      Math.abs(messages[i].createAt.seconds - newMess[j - 1].createAt.seconds) <
-        3600
-    ) {
-      newMess[j - 1].contents = [
-        ...newMess[j - 1].contents,
-        {
-          id: messages[i].id,
-          message: messages[i].content,
-          createAt: messages[i].createAt,
-          love: messages[i].love.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          haha: messages[i].haha.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          wow: messages[i].wow.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          sad: messages[i].sad.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          angry: messages[i].angry.map(uid => room.members.filter(m => m.uid===uid)[0]),
-          like: messages[i].like.map(uid => room.members.filter(m => m.uid===uid)[0])
-        },
-      ];
-    } else {
-      newMess = [
-        ...newMess,
-        {
-          id: messages[i].id,
-          uid: messages[i].uid,
-          displayName: messages[i].displayName,
-          photoURL: messages[i].photoURL,
-          isOwnMess: messages[i].uid === uid,
-          createAt: messages[i].createAt,
-          contents: [
-            {
-              id: messages[i].id,
-              message: messages[i].content,
-              createAt: messages[i].createAt,
-              love: messages[i].love.map(uid => room.members.filter(m => m.uid===uid)[0]),
-              haha: messages[i].haha.map(uid => room.members.filter(m => m.uid===uid)[0]),
-              wow: messages[i].wow.map(uid => room.members.filter(m => m.uid===uid)[0]),
-              sad: messages[i].sad.map(uid => room.members.filter(m => m.uid===uid)[0]),
-              angry: messages[i].angry.map(uid => room.members.filter(m => m.uid===uid)[0]),
-              like: messages[i].like.map(uid => room.members.filter(m => m.uid===uid)[0]),
-            },
-          ],
-        },
-      ];
-      j++;
-    }
-  }
-  console.log(newMess);
-  return newMess;
-}
+
 
 function Content() {
   const [height, setHeight] = useState(window.innerHeight - 139);
   const contentElement = useRef();
-  const { currentRoom, searchRoom } = useContext(AppContext);
+  const { currentRoom, searchRoom, setOpenReactControl } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
   const room = currentRoom || searchRoom;
@@ -115,10 +37,26 @@ function Content() {
     };
   }, []);
 
+  const handleToggleReactControl = (e,content) => {
+    setOpenReactControl(oldState => {
+      if(!oldState) return {
+        top: e.target.getBoundingClientRect().top,
+        left: e.target.getBoundingClientRect().left,
+        content
+      }
+      if(e.target.getBoundingClientRect().top===oldState.top&&e.target.getBoundingClientRect().left===oldState.left) return
+      return {
+        top: e.target.getBoundingClientRect().top,
+        left: e.target.getBoundingClientRect().left,
+        content
+      }
+    })
+  }
+
   useEffect(() => {
     contentElement.current.scrollTop =
       contentElement.current.scrollHeight - contentElement.current.clientHeight;
-  }, [messages]);
+  }, [messages.length]);
 
   return (
     <div className="mt-[76px] container">
@@ -255,77 +193,15 @@ function Content() {
                             style.borderBottomRightRadius = "18px";
                         }
                         return (
-                          <li key={content.id} className="mb-[2px] message-line relative">
+                          <li key={content.id} className="mb-[2px] message-line">
                             <div className="max-w-[65%] mr-0 ml-auto relative">
-                              <div className="flex justify-end mr-[14px] ml-auto relative">
+                              <div className="flex justify-end mr-[14px] ml-auto">
                                 <div className="relative z-[10] flex justify-center items-center mr-[5px]">
-                                    <div className="w-[22px] h-[22px] flex justify-center items-center rounded-full reaction-icon invisible cursor-pointer hover:bg-[#eee]">
+                                    <div 
+                                    className="w-[22px] h-[22px] flex justify-center items-center rounded-full reaction-icon invisible cursor-pointer hover:bg-[#eee]"
+                                    onClick={(e)=> handleToggleReactControl(e,content)}
+                                    >
                                       <FontAwesomeIcon className="text-[14px] text-[#65676B] flex justify-center items-center" icon={faSmile} />
-                                    </div>
-                                    <div className="absolute z-[1000] bottom-full mb-[-4px]">
-                                        <div className="flex justify-center items-center h-[52px] w-max drop-shadow-xl bg-white rounded-[24px] px-[12px] py-[8px]">
-                                          <div>
-                                            <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/love.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          <div>
-                                          <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/haha.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          <div>
-                                          <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/wow.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          <div>
-                                          <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/sad.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          <div>
-                                          <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/angry.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          <div>
-                                          <img
-                                            src={
-                                              process.env.PUBLIC_URL +
-                                              "/img/like.png"
-                                            }
-                                            alt=""
-                                            className="w-[32px] h-[32px] p-[2px] cursor-pointer"
-                                            />
-                                          </div>
-                                          
-                                        </div>
                                     </div>
                                 </div>
                                 <div

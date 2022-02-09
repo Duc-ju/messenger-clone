@@ -42,6 +42,7 @@ function AuthProvider({ children }) {
   const [searchRoom, setSearchRoom] = useState();
   const [messagePending, setMessagePending] = useState();
   const [messageServerIsChanged, setMessageServerIsChanged] = useState(false);
+  const [openReactControl, setOpenReactControl] = useState()
 
   const { user } = useContext(AuthContext);
 
@@ -157,6 +158,8 @@ function AuthProvider({ children }) {
         setSearchRoom,
         messagePending,
         setMessagePending,
+        openReactControl,
+        setOpenReactControl,
       }}
     >
       {children}
