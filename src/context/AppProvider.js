@@ -43,6 +43,8 @@ function AuthProvider({ children }) {
   const [messagePending, setMessagePending] = useState();
   const [messageServerIsChanged, setMessageServerIsChanged] = useState(false);
   const [openReactControl, setOpenReactControl] = useState()
+  const [openToolTip, setOpenToolTip] = useState()
+  const [openReactionList, setOpenReactionList] = useState()
 
   const { user } = useContext(AuthContext);
 
@@ -160,6 +162,10 @@ function AuthProvider({ children }) {
         setMessagePending,
         openReactControl,
         setOpenReactControl,
+        openToolTip,
+        setOpenToolTip,
+        openReactionList,
+        setOpenReactionList
       }}
     >
       {children}

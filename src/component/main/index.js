@@ -5,9 +5,17 @@ import ReactControl from './ReactControl'
 import Control from './Control'
 import ChatBox from './ChatBox'
 import Info from './Info'
+import ToolTip from './ToolTip'
 
 function Main() {
-    const { currentRoom, openInfo, isOpenCreateRoom, openReactControl } = useContext(AppContext)
+    const { 
+        currentRoom, 
+        openInfo, 
+        isOpenCreateRoom, 
+        openReactControl,
+        openToolTip,
+        openReactionList
+    } = useContext(AppContext)
     return(<div>
         <div className="flex">
             <div className="w-[28%] relative z-0">
@@ -30,8 +38,9 @@ function Main() {
                 {currentRoom&&openInfo&&<Info />}
             </div>
         </div>
-        {/* <ReactionList /> */}
+        {openReactionList&&<ReactionList />}
         {openReactControl&&<ReactControl />}
+        {openToolTip&&<ToolTip />}
     </div>)
 
 }
