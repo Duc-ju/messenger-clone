@@ -40,7 +40,7 @@ function PopUp({ handleClosePopUp }){
     },[])
     return(
         <div 
-        className="absolute bg-white p-[6px] rounded-lg shadow-2xl border top-[68px] z-[100] flex flex-col min-w-[282px]"
+        className="absolute bg-white p-[6px] rounded-lg shadow-2xl border top-[68px] z-[1100] flex flex-col min-w-[282px]"
         ref={popUpElement}
         >
             <div className="flex items-center p-[8px] hover:bg-[#eee] rounded-md cursor-pointer w-max min-w-full">

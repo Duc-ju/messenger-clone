@@ -4,6 +4,7 @@ import { getRoomName } from "../../../logic/getRoomName";
 import { countReaction } from "../../../logic/countReaction";
 import { convertTime } from "../../../logic/convertTime";
 import { messageReducer } from "../../../logic/messageReducer";
+import { db } from "../../../firebase/config";
 import useFirestore from "../../../hooks/useFirestore";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
@@ -19,7 +20,8 @@ function Content() {
     setOpenReactControl,
     openReactControl,
     setOpenToolTip,
-    setOpenReactionList
+    setOpenReactionList,
+    setMessageServerIsChanged
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
@@ -32,6 +34,23 @@ function Content() {
     };
   }, [room]);
   const messages = useFirestore("messages", messageCondition);
+
+  useEffect(() => {
+    let check = false
+    messages.forEach((message) => {
+      if(!message.readed.includes(user.uid)){
+        const messageRef = db
+        .collection("messages")
+        .doc(message.id);
+        messageRef.update({
+          readed: [...message.readed, user.uid]
+        });
+        check = true
+      }
+    })
+    if(check) setMessageServerIsChanged(true)
+  },[messages])
+  
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - 139);
@@ -111,7 +130,7 @@ function Content() {
   useEffect(() => {
     contentElement.current.scrollTop =
       contentElement.current.scrollHeight - contentElement.current.clientHeight;
-  }, [messages.length]);
+  }, [messages]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -239,7 +258,12 @@ function Content() {
                                 >
                                   <span>{content.message}</span>
                                   {countReaction(content) > 0 && (
-                                    <div className="absolute z-[10] right-0 min-w-fit max-w-fit mr-auto">
+                                    <div 
+                                    className="absolute z-[10] right-0 min-w-fit max-w-fit mr-auto"
+                                    style={{
+                                      left: content.message.length<10&&countReaction(content) > 3?'0':''
+                                    }}
+                                    >
                                       <ul
                                         className="p-[1.5px] flex rounded-full min-w-max bg-white drop-shadow-lg cursor-pointer"
                                         onMouseEnter={(e) => {

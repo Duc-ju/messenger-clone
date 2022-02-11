@@ -29,6 +29,7 @@ function Control() {
     setIsOpenCreateRoom,
     setMessagePending,
     searchRoom,
+    setMessageServerIsChanged
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
@@ -43,7 +44,6 @@ function Control() {
           setCurrentRoom();
           setChoosers([]);
           setOpenInfo(true);
-          console.log("set pending: " + message);
           setMessagePending(message);
         } else {
           addDocument("messages", {
@@ -58,12 +58,14 @@ function Control() {
             sad: [],
             angry: [],
             like: [],
+            readed: [user.uid]
           });
           setCurrentRoom(searchRoom);
           setIsOpenCreateRoom(false);
           setChoosers([]);
           setOpenInfo(true);
           setMessage("");
+          setMessageServerIsChanged(true)
         }
       }
     } else {
@@ -80,8 +82,10 @@ function Control() {
           sad: [],
           angry: [],
           like: [],
+          readed: [user.uid]
         });
         setMessage("");
+        setMessageServerIsChanged(true)
       }
     }
     setIsTyped(false);

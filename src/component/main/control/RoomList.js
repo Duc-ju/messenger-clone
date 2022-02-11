@@ -7,7 +7,7 @@ import { getShortString } from "../../../logic/getShortString";
 import { getRangeOfTimeToCurrent } from "../../../logic/getRangeOfTimeToCurrent";
 import { getUserName } from "../../../logic/getUserName";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBellSlash, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faBellSlash, faTimes, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import "./scrollBar.css";
 
 function RoomList() {
@@ -57,7 +57,7 @@ function RoomList() {
 
   return (
     <div
-      className="mt-[138px] px-[8px] overflow-y-scroll snap-y"
+      className="mt-[138px] px-[8px] overflow-y-scroll snap-y relative z-0"
       style={{
         height: `${height}px`,
       }}
@@ -129,7 +129,7 @@ function RoomList() {
             }}
             onClick={() => handleChooseRoom(room)}
           >
-            <div className="grid grid-cols-10">
+            <div className="grid grid-cols-10 relative">
               <div className="col-span-2">
                 {room.members.length === 2 && (
                   <img
@@ -150,37 +150,58 @@ function RoomList() {
                     <div className="absolute right-0 top-0">
                       <img
                         src={getPhotoURL(room.members.filter(member => member.uid!==user.uid)[0])}
-                        alt={room.members[0].displayName
-                          ?.charAt(0)
-                          .toUpperCase()}
+                        alt=""
                         className="w-[38px] h-[38px] rounded-full"
                       />
                     </div>
                     <div className="absolute left-0 bottom-0">
                       <img
                         src={getPhotoURL(room.members.filter(member => member.uid!==user.uid)[1])}
-                        alt={room.members[1].displayName
-                          ?.charAt(0)
-                          .toUpperCase()}
+                        alt=""
                         className="w-[38px] h-[38px] rounded-full border-2 border-white"
                       />
                     </div>
                   </div>
                 )}
               </div>
-              <div className="col-span-7 text-left">
-                <h3 className="text-[.9375rem]">
+              <div className="col-span-8 text-left">
+                <h3 
+                className="text-[.9375rem]"
+                style={{
+                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
+                }}
+                >
                   {getRoomName(room, user.uid)}
                 </h3>
-                {room.lastestMessage&&<span>
-                  <span className="text-[.8125rem]">{(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,20)}</span>
+                {room.lastestMessage&&<span
+                style={{
+                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
+                }}
+                >
+                  <span className="text-[.8125rem]">{(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,16)}</span>
                   <span className="mx-[6px]">·</span>
-                  <span className="text-[.8125rem]">{getRangeOfTimeToCurrent(room.lastestMessage.createAt.seconds)}</span>
+                  {room.lastestMessage.createAt&&<span className="text-[.8125rem]">{getRangeOfTimeToCurrent(room.lastestMessage.createAt.seconds)}</span>}
                 </span>}
               </div>
-              <div className="col-span-1 flex items-center justify-end">
-                {/* <FontAwesomeIcon icon={faBellSlash} /> */}
-              </div>
+              {room.lastestMessage&&<div className="right-0 top-[50%] translate-y-[-50%] absolute flex items-center justify-end text-[#8A8D91]">
+                {room.lastestMessage.uid===user.uid&&room.lastestMessage.readed.length===1&&<FontAwesomeIcon icon={faCheckCircle} />}
+                {room.lastestMessage.uid===user.uid&&room.lastestMessage.readed.filter(r => r.uid!==user.uid).slice(0,3).map((r, index, arr) => (
+                  <img
+                  key={r.uid}
+                  src={getPhotoURL(r)}
+                  className="w-[16px] h-[16px] rounded-full"
+                  style={{
+                    transform: arr.length>1&&index<arr.length-1?`translateX(${(arr.length-index-1)*4}px)`:'0',
+                    zIndex: arr.length-index
+                  }}
+                  />
+                ))}
+                {room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0&&<img 
+                src={process.env.PUBLIC_URL + '/img/active.png'}
+                className="w-[8px] h-[8px]"
+                />}
+                
+              </div>}
             </div>
           </li>
         ))}

@@ -72,7 +72,6 @@ function CreaHeader() {
         if(count===room.members.length) return true;
         return false;
       })
-      console.log({matchRoom:matchRoom});
       if(matchRoom.length===1) setSearchRoom(matchRoom[0])
       else setSearchRoom()
       return newChoosers

@@ -38,7 +38,7 @@ function Header(){
 
     
     return(
-        <div className="fixed top-0 left-0 w-[28%] bg-white border-r">
+        <div className="fixed top-0 left-0 w-[28%] bg-white border-r z-[1000]">
             <div className="flex justify-between">
                 <div className="pt-[20px] px-[16px] pb-[12px] flex items-center">
                     <img 

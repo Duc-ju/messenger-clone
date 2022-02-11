@@ -118,6 +118,15 @@ function AuthProvider({ children }) {
         rooms.sort((a, b) => {
           return b.lastestMessage.createAt.seconds - a.lastestMessage.createAt.seconds;
         });
+        if(rooms){
+          rooms = rooms.map((room) => {
+            if(room.lastestMessage&&room.lastestMessage.readed){
+              const readed = room.lastestMessage.readed.map(r => room.members.filter(member => member.uid ===r)[0])
+              room.lastestMessage.readed = readed
+            }
+            return room
+          })
+        }
         if (messagePending) {
           setIsOpenCreateRoom(false);
           setCurrentRoom(rooms[0]);
@@ -132,11 +141,24 @@ function AuthProvider({ children }) {
             wow: [],
             sad: [],
             angry: [],
-            like: []
+            like: [],
+            readed: [user.uid],
           });
+          setMessageServerIsChanged(true)
         }
         else{
           setRooms(rooms);
+          let check = false
+          if(!currentRoom){
+            console.log('chua co phong hien tai');
+            rooms.forEach(room => {
+              if(!check&&room&&room.lastestMessage&&room.lastestMessage.readed&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length>0){
+                console.log('tim thay phong');
+                setCurrentRoom(room);
+                check=true
+              }
+            })
+          }
         }
       });
     });
@@ -165,7 +187,8 @@ function AuthProvider({ children }) {
         openToolTip,
         setOpenToolTip,
         openReactionList,
-        setOpenReactionList
+        setOpenReactionList,
+        setMessageServerIsChanged
       }}
     >
       {children}
