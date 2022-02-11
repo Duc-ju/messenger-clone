@@ -39,7 +39,7 @@ function Header(){
     
     return(
         <div className="fixed top-0 left-0 w-[28%] bg-white border-r z-[1000]">
-            <div className="flex justify-between">
+            <div className="flex justify-between relative z-[1000]">
                 <div className="pt-[20px] px-[16px] pb-[12px] flex items-center">
                     <img 
                     src={getPhotoURL(user)}
@@ -49,7 +49,7 @@ function Header(){
                     <h3 className="font-bold text-2xl ml-3">Chat</h3>
                 </div>
                 <div
-                className="flex items-center mr-3 relative"
+                className="flex items-center mr-3 relative z-[1000]"
                 >
                     {displayPopUp&&<PopUp handleClosePopUp={handleClosePopUp} />}
                     <div

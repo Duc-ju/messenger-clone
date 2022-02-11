@@ -9,7 +9,7 @@ import useFirestore from "../../../hooks/useFirestore";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSmile } from "@fortawesome/free-solid-svg-icons";
+import { faSmile, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 function Content() {
   const [height, setHeight] = useState(window.innerHeight - 139);
@@ -139,6 +139,15 @@ function Content() {
     contentElement.current.addEventListener("scroll", handleScroll);
   }, [contentElement.current]);
 
+  const messageRender = messageReducer(messages, room, user.uid)
+  const getLastMessageContent = () => {
+    if(!messageRender||!messageRender.length) return
+    const lastMessage = messageRender[messageRender.length - 1]
+    if(!lastMessage) return
+    const lastMessageContents = lastMessage.contents
+    return lastMessageContents[lastMessageContents.length - 1]
+  }
+  const lastMessage = getLastMessageContent()
   return (
     <div className="mt-[76px] container">
       <div
@@ -199,7 +208,7 @@ function Content() {
           <p className="text-[.8125rem]">Cùng bắt đầu cuộc trò chuyện</p>
         </div>
         <div className="relative">
-          {messageReducer(messages, room, user.uid).map((message) => {
+          {messageRender.map((message) => {
             if (!message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
@@ -416,7 +425,7 @@ function Content() {
                             className="mb-[2px] message-line"
                           >
                             <div className="max-w-[65%] mr-0 ml-auto relative">
-                              <div className="flex justify-end mr-[14px] ml-auto">
+                              <div className="flex justify-end mr-[20px] ml-auto">
                                 <div className="relative z-[10] flex justify-center items-center mr-[5px]">
                                   <div
                                     className="w-[22px] h-[22px] flex justify-center items-center rounded-full reaction-icon invisible cursor-pointer hover:bg-[#eee]"
@@ -463,7 +472,7 @@ function Content() {
                                 </div>
                               </div>
                               {countReaction(content) > 0 && (
-                                <div className="mb-[-2px] relative z-[10] bottom-[-10px] right-0 min-w-fit max-w-fit ml-auto mr-[14px] translate-y-[-20px]">
+                                <div className="mb-[-2px] relative z-[10] bottom-[-10px] right-0 min-w-fit max-w-fit ml-auto mr-[20px] translate-y-[-20px]">
                                   <ul
                                     className="p-[1.5px] flex rounded-full bg-white drop-shadow-lg cursor-pointer"
                                     onMouseEnter={(e) => {
@@ -561,6 +570,26 @@ function Content() {
               );
             }
           })}
+          {lastMessage&&lastMessage.readed.length===1&&lastMessage.readed[0].uid===user.uid&&<div className="flex justify-end mr-[6px] relative z-[10]">
+            <div
+            className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
+            style={{
+              bottom: countReaction(lastMessage)>0?'32px':'16px'
+            }}
+            >
+              <FontAwesomeIcon icon={faCheckCircle} />
+            </div>
+          </div>}
+          {lastMessage&&lastMessage.readed.length&&<div className="flex justify-end mr-[6px] relative z-[10]">
+            {lastMessage.readed.filter(r => r!==undefined).filter(r => r.uid !== user.uid).slice(0,4).map(r => (
+              <img
+              key={r.uid}
+              src={getPhotoURL(r)}
+              alt=""
+              className="w-[14px] h-[14px] rounded-full mr-[2px]"
+              />
+            ))}
+          </div>}
         </div>
       </div>
     </div>
