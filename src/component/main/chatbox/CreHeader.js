@@ -70,6 +70,7 @@ function CreaHeader() {
 
       const testChoosers = [...newChoosers,user]
       const matchRoom = rooms.filter(room => {
+        if(room.displayName&&room.displayName.length) return false
         if(room.members.length !== testChoosers.length) return false;
         let count = 0
         room.members.forEach(member => {

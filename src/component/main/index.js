@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { AppContext } from "../../context/AppProvider";
-import ReactionList from "./ReactionList";
+import ReactionListModal from "./ReactionListModal";
 import ReactControl from "./ReactControl";
+import ChangeRoomNameModal from "./ChangeRoomNameModal";
 import Control from "./Control";
 import ChatBox from "./ChatBox";
 import Info from "./Info";
@@ -15,6 +16,7 @@ function Main() {
     openReactControl,
     openToolTip,
     openReactionList,
+    openChangeRoomName
   } = useContext(AppContext);
   return (
     <div className="overflow-hidden">
@@ -41,9 +43,10 @@ function Main() {
           {currentRoom && openInfo && <Info />}
         </div>
       </div>
-      {openReactionList && <ReactionList />}
+      {openReactionList && <ReactionListModal />}
       {openReactControl && <ReactControl />}
       {openToolTip && <ToolTip />}
+      {openChangeRoomName&&<ChangeRoomNameModal />}
     </div>
   );
 }

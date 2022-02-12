@@ -46,6 +46,7 @@ function AuthProvider({ children }) {
   const [openToolTip, setOpenToolTip] = useState();
   const [openReactionList, setOpenReactionList] = useState();
   const [intervalID, setIntervalID] = useState();
+  const [openChangeRoomName, setOpenChangeRoomName] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -203,6 +204,15 @@ function AuthProvider({ children }) {
               }
             });
           }
+          else{
+            check = false;
+            rooms.forEach((room) => {
+              if(!check && room.id===currentRoom.id){
+                setCurrentRoom(room);
+                check = true;
+              }
+            });
+          }
           check = false;
           rooms.forEach((room) => {
             if (
@@ -260,6 +270,8 @@ function AuthProvider({ children }) {
         openReactionList,
         setOpenReactionList,
         setMessageServerIsChanged,
+        openChangeRoomName,
+        setOpenChangeRoomName,
       }}
     >
       {children}
