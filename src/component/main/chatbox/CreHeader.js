@@ -44,7 +44,6 @@ function CreaHeader() {
   const handleSearch = () => {
     fetchUserList(searchName.trim(), choosers, user).then((newResults) => {
         setResults(newResults);
-        console.log(newResults);
     });
   };
   useEffect(() => {
@@ -95,6 +94,7 @@ function CreaHeader() {
       const newChoosers = oldChoosers.filter(chooser => chooser.uid!==removeChooser.uid)
       const testChoosers = [...newChoosers,user]
       const matchRoom = rooms.filter(room => {
+        if(room.displayName&&room.displayName.length) return false
         if(room.members.length !== testChoosers.length) return false;
         let count = 0
         room.members.forEach(member => {

@@ -173,46 +173,31 @@ function AuthProvider({ children }) {
         } else {
           setRooms(rooms);
           let check = false;
-          if (!currentRoom) {
-            rooms.forEach((room) => {
-              if (
-                !check &&
-                room &&
-                room.lastestMessage &&
-                room.lastestMessage.readed &&
-                room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                  .length > 0
-              ) {
-                setCurrentRoom(room);
-                check = true;
-              }
-            });
-          }
-          if (!currentRoom) {
-            check = false;
-            rooms.forEach((room) => {
-              if (
-                !check &&
-                room &&
-                room.lastestMessage &&
-                room.lastestMessage.readed &&
-                room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                  .length > 0
-              ) {
-                setCurrentRoom(room);
-                check = true;
-              }
-            });
-          }
-          else{
-            check = false;
-            rooms.forEach((room) => {
-              if(!check && room.id===currentRoom.id){
-                setCurrentRoom(room);
-                check = true;
-              }
-            });
-          }
+          setCurrentRoom((oldRoom) => {
+            if (!oldRoom) {
+              rooms.forEach((room) => {
+                if (
+                  !check &&
+                  room &&
+                  room.lastestMessage &&
+                  room.lastestMessage.readed &&
+                  room.lastestMessage.readed.filter((r) => r.uid === user.uid)
+                    .length > 0
+                ) {
+                  setCurrentRoom(room);
+                  check = true;
+                }
+              });
+            } else {
+              check = false;
+              rooms.forEach((room) => {
+                if (!check && room.id === oldRoom.id) {
+                  setCurrentRoom(room);
+                  check = true;
+                }
+              });
+            }
+          });
           check = false;
           rooms.forEach((room) => {
             if (

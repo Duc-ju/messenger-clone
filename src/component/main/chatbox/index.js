@@ -36,7 +36,7 @@ function ChatBox() {
         <>
           <CreaHeader />
           {searchRoom ? <Content /> : <CreContent />}
-          {choosers.length > 0 && <Control />}
+          {choosers.length > 0 && <Control focusControl={focusControl} setFocusControl={setFocusControl} />}
         </>
       )}
     </div>
