@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 async function fetchUserList(search, curChoosers, curUser) {
-  const userRef = db.collection("users")
+  let userRef = db.collection("users")
   if(search.length > 0) {
     userRef = userRef.where("keywords", "array-contains", search?.toLowerCase())
   }
@@ -44,6 +44,7 @@ function CreaHeader() {
   const handleSearch = () => {
     fetchUserList(searchName.trim(), choosers, user).then((newResults) => {
         setResults(newResults);
+        console.log(newResults);
     });
   };
   useEffect(() => {
