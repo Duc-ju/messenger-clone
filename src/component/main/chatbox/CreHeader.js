@@ -7,9 +7,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 async function fetchUserList(search, curChoosers, curUser) {
-  return db
-    .collection("users")
-    .where("keywords", "array-contains", search?.toLowerCase())
+  const userRef = db.collection("users")
+  if(search.length > 0) {
+    userRef = userRef.where("keywords", "array-contains", search?.toLowerCase())
+  }
+  return userRef
     .orderBy("displayName")
     .limit(20)
     .get()
@@ -40,10 +42,15 @@ function CreaHeader() {
   const { user } = useContext(AuthContext)
   const {choosers, setChoosers, rooms, setSearchRoom} = useContext(AppContext)
   const handleSearch = () => {
-    fetchUserList(searchName, choosers, user).then((newResults) => {
+    fetchUserList(searchName.trim(), choosers, user).then((newResults) => {
         setResults(newResults);
     });
   };
+  useEffect(() => {
+    fetchUserList('', choosers , user).then((newResults) => {
+      setResults(newResults);
+    });
+  },[choosers])
   useEffect(() =>{
     const handleClick = ({ target })=>{
         if(!resultElement.current?.contains(target)&&!inputElement.current?.contains(target)){

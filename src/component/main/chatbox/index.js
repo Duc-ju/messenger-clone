@@ -19,6 +19,10 @@ function ChatBox() {
       document.removeEventListener("visibilitychange", handleVisibleChange);
   }, []);
 
+  useEffect(() => {
+    setFocusControl(true);
+  },[currentRoom])
+
   return (
     <div>
       {currentRoom && (

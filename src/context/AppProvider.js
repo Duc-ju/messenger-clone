@@ -62,21 +62,22 @@ function AuthProvider({ children }) {
       operator: "in",
       compareValue: rooms.map((room) => room.rid),
     };
-  },[rooms.length]);
+  }, [rooms.length]);
 
   useEffect(() => {
     const handleVisibleChange = () => {
-      if(!document.hidden){
-        setIntervalID(oldID => {
-          if(oldID) setIntervalID()
-          clearInterval(oldID)
-        })
-        document.title = 'Messenger'
+      if (!document.hidden) {
+        setIntervalID((oldID) => {
+          if (oldID) setIntervalID();
+          clearInterval(oldID);
+        });
+        document.title = "Messenger";
       }
-    }
-    document.addEventListener('visibilitychange', handleVisibleChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibleChange)
-  },[])
+    };
+    document.addEventListener("visibilitychange", handleVisibleChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibleChange);
+  }, []);
 
   useEffect(() => {
     let collectionRef = db.collection("messages");
@@ -84,7 +85,9 @@ function AuthProvider({ children }) {
       messageServerConditions &&
       messageServerConditions.compareValue &&
       messageServerConditions.compareValue.length > 0 &&
-      messageServerConditions.compareValue.filter(value => value===undefined) === 0
+      messageServerConditions.compareValue.filter(
+        (value) => value === undefined
+      ) === 0
     ) {
       collectionRef = collectionRef.where(
         messageServerConditions.fieldName,
@@ -184,6 +187,22 @@ function AuthProvider({ children }) {
               }
             });
           }
+          if (!currentRoom) {
+            check = false;
+            rooms.forEach((room) => {
+              if (
+                !check &&
+                room &&
+                room.lastestMessage &&
+                room.lastestMessage.readed &&
+                room.lastestMessage.readed.filter((r) => r.uid === user.uid)
+                  .length > 0
+              ) {
+                setCurrentRoom(room);
+                check = true;
+              }
+            });
+          }
           check = false;
           rooms.forEach((room) => {
             if (
@@ -192,34 +211,25 @@ function AuthProvider({ children }) {
               room.lastestMessage &&
               room.lastestMessage.readed &&
               room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                .length > 0
+                .length === 0 &&
+              document.hidden
             ) {
-              setCurrentRoom(room);
+              const id = setInterval(() => {
+                if (
+                  document.title === "Messenger" ||
+                  document.title === "(1) Messenger"
+                )
+                  document.title =
+                    room.lastestMessage.displayName + " đã gửi một tin nhắn";
+                else document.title = "(1) Messenger";
+              }, 2000);
+              setIntervalID((oldID) => {
+                if (oldID) clearInterval(oldID);
+                return id;
+              });
               check = true;
             }
           });
-          check = false
-          rooms.forEach(room => {
-            if (
-              !check &&
-              room &&
-              room.lastestMessage &&
-              room.lastestMessage.readed &&
-              room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                .length === 0 && document.hidden
-            ) {
-              const id = setInterval(() => {
-                if(document.title==='Messenger'||document.title==='(1) Messenger')
-                  document.title = room.lastestMessage.displayName + ' đã gửi một tin nhắn'
-                else document.title = '(1) Messenger'
-              },2000)
-              setIntervalID(oldID => {
-                if(oldID) clearInterval(oldID)
-                return id
-              })
-              check = true
-            }
-          })
         }
       });
     });
