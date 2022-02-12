@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect } from "react";
+import { useState, useContext, useRef, useLayoutEffect } from "react";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { addDocument } from "../../../firebase/services";
@@ -13,7 +13,7 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Control() {
+function Control({ focusControl, setFocusControl }) {
   const [message, setMessage] = useState("");
   const [isTyped, setIsTyped] = useState(false);
   const inputElement = useRef();
@@ -97,11 +97,17 @@ function Control() {
     }
   };
 
+  useLayoutEffect(() => {
+    if(focusControl) inputElement.current.focus()
+    else inputElement.current.blur()
+  },[focusControl])
+
   const handleChange = (e) => {
     setMessage(e.target.value);
     if (e.target.value.replace(/\s/g, "").length) setIsTyped(true);
     else setIsTyped(false);
   };
+
 
   return (
     <div
@@ -144,6 +150,8 @@ function Control() {
             ref={inputElement}
             onChange={(e) => handleChange(e)}
             onKeyUp={(e) => handleSubmit(e)}
+            onFocus={() => setFocusControl(true)}
+            onBlur={() => setFocusControl(false)}
             autoFocus
             value={message}
             className="w-full pt-[7px] pl-[12px] pr-[6px] pb-[9px] text-[0.9375rem] rounded-[50px] outline-none bg-[#eee]"

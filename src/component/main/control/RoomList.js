@@ -87,18 +87,14 @@ function RoomList() {
                     <div className="absolute right-0 top-0">
                       <img
                         src={getPhotoURL(choosers[0])}
-                        alt={choosers[0].displayName
-                          ?.charAt(0)
-                          .toUpperCase()}
+                        alt=""
                         className="w-[38px] h-[38px] rounded-full"
                       />
                     </div>
                     <div className="absolute left-0 bottom-0">
                       <img
                         src={getPhotoURL(choosers[1])}
-                        alt={choosers[1].displayName
-                          ?.charAt(0)
-                          .toUpperCase()}
+                        alt=""
                         className="w-[38px] h-[38px] rounded-full border-2 border-white"
                       />
                     </div>
@@ -168,14 +164,14 @@ function RoomList() {
                 <h3 
                 className="text-[.9375rem]"
                 style={{
-                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
+                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!==user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
                 }}
                 >
                   {getRoomName(room, user.uid)}
                 </h3>
                 {room.lastestMessage&&<span
                 style={{
-                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
+                  fontWeight: room.lastestMessage&&room.lastestMessage.uid!==user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
                 }}
                 >
                   <span className="text-[.8125rem]">{(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,16)}</span>
@@ -190,15 +186,18 @@ function RoomList() {
                   key={r.uid}
                   src={getPhotoURL(r)}
                   className="w-[16px] h-[16px] rounded-full"
+                  alt=""
                   style={{
                     transform: arr.length>1&&index<arr.length-1?`translateX(${(arr.length-index-1)*4}px)`:'0',
                     zIndex: arr.length-index
                   }}
                   />
                 ))}
-                {room.lastestMessage&&room.lastestMessage.uid!=user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0&&<img 
+                {room.lastestMessage&&room.lastestMessage.uid!==user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0&&
+                <img 
                 src={process.env.PUBLIC_URL + '/img/active.png'}
                 className="w-[8px] h-[8px]"
+                alt=""
                 />}
                 
               </div>}

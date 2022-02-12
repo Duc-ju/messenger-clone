@@ -11,7 +11,7 @@ import { AuthContext } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
-function Content() {
+function Content({ focusControl }) {
   const [height, setHeight] = useState(window.innerHeight - 139);
   const contentElement = useRef();
   const {
@@ -21,7 +21,7 @@ function Content() {
     openReactControl,
     setOpenToolTip,
     setOpenReactionList,
-    setMessageServerIsChanged
+    setMessageServerIsChanged,
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
@@ -36,21 +36,21 @@ function Content() {
   const messages = useFirestore("messages", messageCondition);
 
   useEffect(() => {
-    let check = false
-    messages.forEach((message) => {
-      if(!message.readed.includes(user.uid)){
-        const messageRef = db
-        .collection("messages")
-        .doc(message.id);
-        messageRef.update({
-          readed: [...message.readed, user.uid]
-        });
-        check = true
-      }
-    })
-    if(check) setMessageServerIsChanged(true)
-  },[messages])
-  
+    if (focusControl) {
+      let check = false;
+      messages.forEach((message) => {
+        if (!message.readed.includes(user.uid)) {
+          const messageRef = db.collection("messages").doc(message.id);
+          messageRef.update({
+            readed: [...message.readed, user.uid],
+          });
+          check = true;
+        }
+      });
+      if (check) setMessageServerIsChanged(true);
+    }
+  }, [messages,focusControl]);
+
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - 139);
@@ -62,7 +62,7 @@ function Content() {
   }, []);
 
   const handleToggleReactControl = (e, content) => {
-    setOpenToolTip()
+    setOpenToolTip();
     setOpenReactControl((oldState) => {
       if (!oldState)
         return {
@@ -123,9 +123,9 @@ function Content() {
       wow: content.wow,
       sad: content.sad,
       angry: content.angry,
-      like: content.like
-    })
-  }
+      like: content.like,
+    });
+  };
 
   useEffect(() => {
     contentElement.current.scrollTop =
@@ -139,15 +139,15 @@ function Content() {
     contentElement.current.addEventListener("scroll", handleScroll);
   }, [contentElement.current]);
 
-  const messageRender = messageReducer(messages, room, user.uid)
+  const messageRender = messageReducer(messages, room, user.uid);
   const getLastMessageContent = () => {
-    if(!messageRender||!messageRender.length) return
-    const lastMessage = messageRender[messageRender.length - 1]
-    if(!lastMessage) return
-    const lastMessageContents = lastMessage.contents
-    return lastMessageContents[lastMessageContents.length - 1]
-  }
-  const lastMessage = getLastMessageContent()
+    if (!messageRender || !messageRender.length) return;
+    const lastMessage = messageRender[messageRender.length - 1];
+    if (!lastMessage) return;
+    const lastMessageContents = lastMessage.contents;
+    return lastMessageContents[lastMessageContents.length - 1];
+  };
+  const lastMessage = getLastMessageContent();
   return (
     <div className="mt-[76px] container">
       <div
@@ -164,14 +164,14 @@ function Content() {
                 src={getPhotoURL(
                   room.members.filter((member) => member.uid !== user.uid)[0]
                 )}
-                href=""
+                alt=""
                 className="w-[56px] h-[56px] rounded-full"
               />
             )}
             {room.members.length > 2 && room.photoURL && (
               <img
                 src={room.photoURL}
-                href=""
+                alt=""
                 className="w-[56px] h-[56px] rounded-full"
               />
             )}
@@ -184,7 +184,7 @@ function Content() {
                         (member) => member.uid !== user.uid
                       )[0]
                     )}
-                    href={room.members[0].displayName?.charAt(0).toUpperCase()}
+                    alt=""
                     className="w-[38px] h-[38px] rounded-full"
                   />
                 </div>
@@ -195,7 +195,7 @@ function Content() {
                         (member) => member.uid !== user.uid
                       )[1]
                     )}
-                    href={room.members[1].displayName?.charAt(0).toUpperCase()}
+                    alt=""
                     className="w-[38px] h-[38px] rounded-full border-2 border-white"
                   />
                 </div>
@@ -221,11 +221,16 @@ function Content() {
                     </div>
                   )}
                   <div className="flex">
-                    <div 
-                    className="ml-[14px] mr-[8px] flex items-end w-[32px]"
-                    style={{
-                      marginBottom: countReaction(message.contents[message.contents.length-1])>0?'18px':''
-                    }}
+                    <div
+                      className="ml-[14px] mr-[8px] flex items-end w-[32px]"
+                      style={{
+                        marginBottom:
+                          countReaction(
+                            message.contents[message.contents.length - 1]
+                          ) > 0
+                            ? "18px"
+                            : "",
+                      }}
                     >
                       <img
                         src={getPhotoURL(message)}
@@ -267,11 +272,15 @@ function Content() {
                                 >
                                   <span>{content.message}</span>
                                   {countReaction(content) > 0 && (
-                                    <div 
-                                    className="absolute z-[10] right-0 min-w-fit max-w-fit mr-auto"
-                                    style={{
-                                      left: content.message.length<10&&countReaction(content) > 3?'0':''
-                                    }}
+                                    <div
+                                      className="absolute z-[10] right-0 min-w-fit max-w-fit mr-auto"
+                                      style={{
+                                        left:
+                                          content.message.length < 10 &&
+                                          countReaction(content) > 3
+                                            ? "0"
+                                            : "",
+                                      }}
                                     >
                                       <ul
                                         className="p-[1.5px] flex rounded-full min-w-max bg-white drop-shadow-lg cursor-pointer"
@@ -281,7 +290,9 @@ function Content() {
                                         onMouseLeave={() => {
                                           handleCloseTooltip();
                                         }}
-                                        onClick={() => {handleOpenReactionList(content)}}
+                                        onClick={() => {
+                                          handleOpenReactionList(content);
+                                        }}
                                       >
                                         {content.love.length > 0 && (
                                           <li className="p-[0.5px]">
@@ -290,6 +301,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/love.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -301,6 +313,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/haha.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -312,6 +325,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/wow.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -323,6 +337,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/sad.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -334,6 +349,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/angry.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -345,6 +361,7 @@ function Content() {
                                                 process.env.PUBLIC_URL +
                                                 "/img/like.png"
                                               }
+                                              alt=""
                                               className="w-[16px] h-[16px]"
                                             />
                                           </li>
@@ -366,13 +383,19 @@ function Content() {
                                     onClick={(e) =>
                                       handleToggleReactControl(e, content)
                                     }
-                                    onMouseEnter={(e) => {setOpenToolTip({
-                                      type: 'top',
-                                      top: e.target.getBoundingClientRect().top,
-                                      left: e.target.getBoundingClientRect().left,
-                                      data: ['Bày tỏ cảm xúc']
-                                    })}}
-                                    onMouseLeave={() => {setOpenToolTip()}}
+                                    onMouseEnter={(e) => {
+                                      setOpenToolTip({
+                                        type: "top",
+                                        top: e.target.getBoundingClientRect()
+                                          .top,
+                                        left: e.target.getBoundingClientRect()
+                                          .left,
+                                        data: ["Bày tỏ cảm xúc"],
+                                      });
+                                    }}
+                                    onMouseLeave={() => {
+                                      setOpenToolTip();
+                                    }}
                                     style={
                                       openReactControl &&
                                       openReactControl.content.id === content.id
@@ -390,7 +413,9 @@ function Content() {
                                   </div>
                                 </div>
                               </div>
-                              {countReaction(content)>0&&<div className="h-[18px] invisible"></div>}
+                              {countReaction(content) > 0 && (
+                                <div className="h-[18px] invisible"></div>
+                              )}
                             </div>
                           </li>
                         );
@@ -432,13 +457,19 @@ function Content() {
                                     onClick={(e) =>
                                       handleToggleReactControl(e, content)
                                     }
-                                    onMouseEnter={(e) => {setOpenToolTip({
-                                      type: 'top',
-                                      top: e.target.getBoundingClientRect().top,
-                                      left: e.target.getBoundingClientRect().left,
-                                      data: ['Bày tỏ cảm xúc']
-                                    })}}
-                                    onMouseLeave={() => {setOpenToolTip()}}
+                                    onMouseEnter={(e) => {
+                                      setOpenToolTip({
+                                        type: "top",
+                                        top: e.target.getBoundingClientRect()
+                                          .top,
+                                        left: e.target.getBoundingClientRect()
+                                          .left,
+                                        data: ["Bày tỏ cảm xúc"],
+                                      });
+                                    }}
+                                    onMouseLeave={() => {
+                                      setOpenToolTip();
+                                    }}
                                     style={
                                       openReactControl &&
                                       openReactControl.content.id === content.id
@@ -481,7 +512,9 @@ function Content() {
                                     onMouseLeave={() => {
                                       handleCloseTooltip();
                                     }}
-                                    onClick={() => {handleOpenReactionList(content)}}
+                                    onClick={() => {
+                                      handleOpenReactionList(content);
+                                    }}
                                   >
                                     {content.love.length > 0 && (
                                       <li className="p-[0.5px]">
@@ -490,6 +523,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/love.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -501,6 +535,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/haha.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -512,6 +547,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/wow.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -523,6 +559,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/sad.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -534,6 +571,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/angry.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -545,6 +583,7 @@ function Content() {
                                             process.env.PUBLIC_URL +
                                             "/img/like.png"
                                           }
+                                          alt=""
                                           className="w-[16px] h-[16px]"
                                         />
                                       </li>
@@ -570,26 +609,36 @@ function Content() {
               );
             }
           })}
-          {lastMessage&&lastMessage.readed.length===1&&lastMessage.readed[0].uid===user.uid&&<div className="flex justify-end mr-[6px] relative z-[10]">
-            <div
-            className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
-            style={{
-              bottom: countReaction(lastMessage)>0?'32px':'16px'
-            }}
-            >
-              <FontAwesomeIcon icon={faCheckCircle} />
+          {lastMessage &&
+            lastMessage.readed.length === 1 &&
+            lastMessage.readed[0].uid === user.uid && (
+              <div className="flex justify-end mr-[6px] relative z-[10]">
+                <div
+                  className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
+                  style={{
+                    bottom: countReaction(lastMessage) > 0 ? "32px" : "16px",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCheckCircle} />
+                </div>
+              </div>
+            )}
+          {lastMessage && lastMessage.readed.length && (
+            <div className="flex justify-end mr-[6px] relative z-[10]">
+              {lastMessage.readed
+                .filter((r) => r !== undefined)
+                .filter((r) => r.uid !== user.uid)
+                .slice(0, 4)
+                .map((r) => (
+                  <img
+                    key={r.uid}
+                    src={getPhotoURL(r)}
+                    alt=""
+                    className="w-[14px] h-[14px] rounded-full mr-[2px]"
+                  />
+                ))}
             </div>
-          </div>}
-          {lastMessage&&lastMessage.readed.length&&<div className="flex justify-end mr-[6px] relative z-[10]">
-            {lastMessage.readed.filter(r => r!==undefined).filter(r => r.uid !== user.uid).slice(0,4).map(r => (
-              <img
-              key={r.uid}
-              src={getPhotoURL(r)}
-              alt=""
-              className="w-[14px] h-[14px] rounded-full mr-[2px]"
-              />
-            ))}
-          </div>}
+          )}
         </div>
       </div>
     </div>

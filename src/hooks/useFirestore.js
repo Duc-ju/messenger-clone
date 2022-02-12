@@ -17,7 +17,7 @@ const useFirestore = (collection, condition, mode) => {
             setDocuments(documents)
         })
         return unsubcribe
-    },[collection,condition])
+    },[collection,condition,mode])
     return documents
 }
 export default useFirestore

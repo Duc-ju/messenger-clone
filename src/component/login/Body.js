@@ -26,12 +26,14 @@ function Body({ handleLogin }){
                         <img 
                         className="h-[44px] w-auto" 
                         src={process.env.PUBLIC_URL + '/img/microsoftD.png'} 
+                        alt=""
                         />
                     </a>
                     <a href="" className="inline-block">
                         <img 
                         className="h-[44px] w-auto"
                         src={process.env.PUBLIC_URL + '/img/appleD.png'} 
+                        alt=""
                         />
                     </a>
                 </div>

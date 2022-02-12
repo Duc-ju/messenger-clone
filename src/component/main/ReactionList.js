@@ -66,6 +66,7 @@ function ReactionList() {
         .sort((a, b) => {
           if (a.uid === user.uid) return -1;
           if (b.uid === user.uid) return 1;
+          return 0
         });
     return currentReaction.data;
   };

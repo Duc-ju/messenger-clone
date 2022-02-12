@@ -17,6 +17,7 @@ function Footer(){
                     <img 
                     src={process.env.PUBLIC_URL + '/img/fromF.jpg'}
                     className="w-[132px] h-auto"
+                    alt=""
                     />
                 </p>
             </div>

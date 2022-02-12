@@ -155,7 +155,7 @@ function CreaHeader() {
                         <div className="">
                             <img
                             src={getPhotoURL(result)}
-                            alt={result.displayName[0]}
+                            alt=""
                             className="w-[36px] h-[36px] rounded-full"
                             />
                         </div>

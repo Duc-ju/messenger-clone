@@ -62,7 +62,7 @@ function AuthProvider({ children }) {
       operator: "in",
       compareValue: rooms.map((room) => room.rid),
     };
-  });
+  },[rooms.length]);
 
   useEffect(() => {
     const handleVisibleChange = () => {
@@ -70,8 +70,8 @@ function AuthProvider({ children }) {
         setIntervalID(oldID => {
           if(oldID) setIntervalID()
           clearInterval(oldID)
-          document.title = 'Messenger'
         })
+        document.title = 'Messenger'
       }
     }
     document.addEventListener('visibilitychange', handleVisibleChange)
@@ -83,7 +83,8 @@ function AuthProvider({ children }) {
     if (
       messageServerConditions &&
       messageServerConditions.compareValue &&
-      messageServerConditions.compareValue.length > 0
+      messageServerConditions.compareValue.length > 0 &&
+      messageServerConditions.compareValue.filter(value => value===undefined) === 0
     ) {
       collectionRef = collectionRef.where(
         messageServerConditions.fieldName,
@@ -97,7 +98,7 @@ function AuthProvider({ children }) {
     });
 
     return unsubcribe;
-  }, []);
+  }, [messageServerConditions]);
 
   useEffect(() => {
     setMessageServerIsChanged(false);
@@ -212,7 +213,10 @@ function AuthProvider({ children }) {
                   document.title = room.lastestMessage.displayName + ' đã gửi một tin nhắn'
                 else document.title = '(1) Messenger'
               },2000)
-              setIntervalID(id)
+              setIntervalID(oldID => {
+                if(oldID) clearInterval(oldID)
+                return id
+              })
               check = true
             }
           })

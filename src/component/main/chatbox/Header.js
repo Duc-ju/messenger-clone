@@ -27,14 +27,14 @@ function Header() {
             {currentRoom.members.length === 2 && (
               <img
                 src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[0])}
-                href=""
+                alt=""
                 className="w-[40px] h-[40px] rounded-full"
               />
             )}
             {currentRoom.members.length > 2 && currentRoom.photoURL && (
               <img
                 src={currentRoom.photoURL}
-                href=""
+                alt=""
                 className="w-[40px] h-[40px] rounded-full"
               />
             )}
@@ -43,14 +43,14 @@ function Header() {
                 <div className="absolute right-0 top-0">
                   <img
                     src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[0])}
-                    href={currentRoom.members[0].displayName?.charAt(0).toUpperCase()}
+                    alt=""
                     className="w-[27px] h-[27px] rounded-full"
                   />
                 </div>
                 <div className="absolute left-0 bottom-0">
                   <img
                     src={getPhotoURL(currentRoom.members.filter(member => member.uid!==user.uid)[1])}
-                    href={currentRoom.members[1].displayName?.charAt(0).toUpperCase()}
+                    alt=""
                     className="w-[27px] h-[27px] rounded-full border-2 border-white"
                   />
                 </div>

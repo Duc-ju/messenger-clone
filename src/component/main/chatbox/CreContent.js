@@ -12,7 +12,7 @@ function CreContent() {
           {choosers.length === 1 && (
             <img
               src={getPhotoURL(choosers[0])}
-              href=""
+              alt=""
               className="w-[56px] h-[56px] rounded-full"
             />
           )}
@@ -21,14 +21,14 @@ function CreContent() {
               <div className="absolute right-0 top-0">
                 <img
                   src={getPhotoURL(choosers[0])}
-                  href={choosers[0].displayName?.charAt(0).toUpperCase()}
+                  alt=""
                   className="w-[38px] h-[38px] rounded-full"
                 />
               </div>
               <div className="absolute left-0 bottom-0">
                 <img
                   src={getPhotoURL(choosers[1])}
-                  href={choosers[1].displayName?.charAt(0).toUpperCase()}
+                  alt=""
                   className="w-[38px] h-[38px] rounded-full border-2 border-white"
                 />
               </div>
