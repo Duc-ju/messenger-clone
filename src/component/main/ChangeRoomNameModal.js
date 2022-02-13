@@ -13,7 +13,7 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
 
   const handleChangeRoomName = () => {
     let newName = nameInput.trim();
-    if (newName !== currentRoom.name) {
+    if (newName !== currentRoom.displayName) {
       const roomRef = db.collection("rooms").doc(currentRoom.id);
       roomRef.update({
         displayName: newName,
@@ -37,8 +37,8 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
           readed: [user.uid],
         });
       }
-      setOpenChangeRoomName(false);
     }
+    setOpenChangeRoomName(false);
   };
   return (
     <div className="fixed top-0 right-[0] flex justify-center items-center bottom-0 left-0 z-[1000] before:top-0 before:absolute before:content-[''] before:right-[0] before:bottom-0 before:left-0 before:bg-[#fff] before:opacity-[60%] before:z-[0]">
