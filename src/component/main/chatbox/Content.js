@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useContext, useMemo } from "react";
+import LogMessage from "./LogMessage";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { getRoomName } from "../../../logic/getRoomName";
 import { countReaction } from "../../../logic/countReaction";
@@ -49,7 +50,7 @@ function Content({ focusControl }) {
       });
       if (check) setMessageServerIsChanged(true);
     }
-  }, [messages,focusControl]);
+  }, [messages, focusControl]);
 
   useEffect(() => {
     function handleResize() {
@@ -130,7 +131,7 @@ function Content({ focusControl }) {
   useEffect(() => {
     contentElement.current.scrollTop =
       contentElement.current.scrollHeight - contentElement.current.clientHeight;
-  }, [messages]);
+  }, [messages.length]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -142,10 +143,17 @@ function Content({ focusControl }) {
   const messageRender = messageReducer(messages, room, user.uid);
   const getLastMessageContent = () => {
     if (!messageRender || !messageRender.length) return;
-    const lastMessage = messageRender[messageRender.length - 1];
-    if (!lastMessage) return;
-    const lastMessageContents = lastMessage.contents;
-    return lastMessageContents[lastMessageContents.length - 1];
+    let lastMessage;
+    for (let i = messageRender.length - 1; i >= 0; i--) {
+      if (messageRender[i].type === undefined) {
+        lastMessage = messageRender[i];
+        break;
+      }
+    }
+    if(lastMessage){
+      const lastMessageContents = lastMessage.contents;
+      return lastMessageContents[lastMessageContents.length - 1];
+    }
   };
   const lastMessage = getLastMessageContent();
   return (
@@ -209,12 +217,16 @@ function Content({ focusControl }) {
         </div>
         <div className="relative">
           {messageRender.map((message) => {
-            if (!message.isOwnMess) {
+            if (message.type) {
+              return <LogMessage key={message.id} message={message} />;
+            } else if (!message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
-                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px]">
-                    {convertTime(message.createAt.seconds)}
-                  </div>
+                  {message.isShowTime && (
+                    <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px]">
+                      {convertTime(message.createAt.seconds)}
+                    </div>
+                  )}
                   {room.members.length > 2 && (
                     <div className="text-[.6875rem] pb-[2px] leading-[1.4545] font-semibold pl-[62px]">
                       {message.displayName}
@@ -423,14 +435,32 @@ function Content({ focusControl }) {
                     </ul>
                   </div>
                   <div className="h-[7px] invisible"></div>
+                  {lastMessage && lastMessage.readed.length > 0 && lastMessage.id===message.id && (
+                    <div className="flex justify-end mr-[6px] relative z-[10]">
+                      {lastMessage.readed
+                        .filter((r) => r !== undefined)
+                        .filter((r) => r.uid !== user.uid)
+                        .slice(0, 4)
+                        .map((r) => (
+                          <img
+                            key={r.uid}
+                            src={getPhotoURL(r)}
+                            alt=""
+                            className="w-[14px] h-[14px] rounded-full mr-[2px]"
+                          />
+                        ))}
+                    </div>
+                  )}
                 </div>
               );
             } else {
               return (
                 <div key={message.id}>
-                  <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px] relative z-[10]">
-                    {convertTime(message.createAt.seconds)}
-                  </div>
+                  {message.isShowTime && (
+                    <div className="text-center leading-[1.2727rem] text-[.6875rem] font-semibold py-[10px] relative z-[10]">
+                      {convertTime(message.createAt.seconds)}
+                    </div>
+                  )}
                   <div className="">
                     <ul className="text-justify w-full">
                       {message.contents.map((content, index) => {
@@ -605,40 +635,41 @@ function Content({ focusControl }) {
                     </ul>
                   </div>
                   <div className="h-[7px] invisible"></div>
+                  {lastMessage &&
+                    lastMessage.readed.length === 1 &&
+                    lastMessage.readed[0].uid === user.uid &&
+                    (<div className="flex justify-end mr-[6px] relative z-[10]">
+                        <div
+                          className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
+                          style={{
+                            bottom:
+                              countReaction(lastMessage) > 0 ? "32px" : "16px",
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCheckCircle} />
+                        </div>
+                      </div>
+                    )}
+                  {lastMessage && lastMessage.readed.length && lastMessage.id===message.id && (
+                    <div className="flex justify-end mr-[6px] relative z-[10]">
+                      {lastMessage.readed
+                        .filter((r) => r !== undefined)
+                        .filter((r) => r.uid !== user.uid)
+                        .slice(0, 4)
+                        .map((r) => (
+                          <img
+                            key={r.uid}
+                            src={getPhotoURL(r)}
+                            alt=""
+                            className="w-[14px] h-[14px] rounded-full mr-[2px]"
+                          />
+                        ))}
+                    </div>
+                  )}
                 </div>
               );
             }
           })}
-          {lastMessage &&
-            lastMessage.readed.length === 1 &&
-            lastMessage.readed[0].uid === user.uid && (
-              <div className="flex justify-end mr-[6px] relative z-[10]">
-                <div
-                  className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
-                  style={{
-                    bottom: countReaction(lastMessage) > 0 ? "32px" : "16px",
-                  }}
-                >
-                  <FontAwesomeIcon icon={faCheckCircle} />
-                </div>
-              </div>
-            )}
-          {lastMessage && lastMessage.readed.length && (
-            <div className="flex justify-end mr-[6px] relative z-[10]">
-              {lastMessage.readed
-                .filter((r) => r !== undefined)
-                .filter((r) => r.uid !== user.uid)
-                .slice(0, 4)
-                .map((r) => (
-                  <img
-                    key={r.uid}
-                    src={getPhotoURL(r)}
-                    alt=""
-                    className="w-[14px] h-[14px] rounded-full mr-[2px]"
-                  />
-                ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

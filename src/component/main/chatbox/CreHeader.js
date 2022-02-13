@@ -1,37 +1,11 @@
 import { useState, useContext, useEffect, useRef } from "react";
-import { db } from '../../../firebase/config'
 import { AuthContext } from '../../../context/AuthProvider'
 import { AppContext } from "../../../context/AppProvider";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
+import { fetchUserList } from "../../../logic/fetchUserList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-async function fetchUserList(search, curChoosers, curUser) {
-  let userRef = db.collection("users")
-  if(search.length > 0) {
-    userRef = userRef.where("keywords", "array-contains", search?.toLowerCase())
-  }
-  return userRef
-    .orderBy("displayName")
-    .limit(20)
-    .get()
-    .then((snapshot) => {
-      return snapshot.docs
-        .map((doc) => ({
-          displayName: doc.data().displayName,
-          uid: doc.data().uid,
-          photoURL: doc.data().photoURL,
-        }))
-        .filter((opt) => {
-            if(opt.uid===curUser.uid) return false;
-            let check=true
-            curChoosers.forEach((currentChooser) => {
-                if(currentChooser.uid===opt.uid) check=false
-            })
-            return check
-        });
-    });
-}
 function CreaHeader() {
   const [searchName, setSearchName] = useState('');
   const [results, setResults] = useState([]);

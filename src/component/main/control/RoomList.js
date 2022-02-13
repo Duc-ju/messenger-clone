@@ -4,6 +4,7 @@ import { AuthContext } from "../../../context/AuthProvider";
 import { getRoomName } from "../../../logic/getRoomName";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { getShortString } from "../../../logic/getShortString";
+import { getMessageLog } from "../../../logic/getMessageLog";
 import { getRangeOfTimeToCurrent } from "../../../logic/getRangeOfTimeToCurrent";
 import { getUserName } from "../../../logic/getUserName";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -174,7 +175,7 @@ function RoomList() {
                   fontWeight: room.lastestMessage&&room.lastestMessage.uid!==user.uid&&room.lastestMessage.readed.filter(r => r.uid===user.uid).length===0?'600':''
                 }}
                 >
-                  <span className="text-[.8125rem]">{(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,16)}</span>
+                  <span className="text-[.8125rem]">{room.lastestMessage.content?(room.lastestMessage.uid===user.uid?'Bạn':getUserName(room.lastestMessage))+': '+getShortString(room.lastestMessage.content,18):getShortString(getMessageLog(room.lastestMessage,user),18)}</span>
                   <span className="mx-[6px]">·</span>
                   {room.lastestMessage.createAt&&<span className="text-[.8125rem]">{getRangeOfTimeToCurrent(room.lastestMessage.createAt.seconds)}</span>}
                 </span>}

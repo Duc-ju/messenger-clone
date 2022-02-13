@@ -21,9 +21,9 @@ import {
   faImage,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Info() {
+function Info({ setOpenChangeRoomName, setOpenAddMember }) {
   const [height, setHeight] = useState(window.innerHeight);
-  const { currentRoom, setOpenChangeRoomName } = useContext(AppContext);
+  const { currentRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
   const [isOpenSetting, setIsOpenSetting] = useState(false);
   const [isOpenMembers, setIsOpenMembers] = useState(false);
@@ -223,7 +223,10 @@ function Info() {
                 </div>
               </li>
             ))}
-            <li className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer">
+            <li 
+            className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer"
+            onClick={() => setOpenAddMember(true)}
+            >
               <div className="py-[8px] pr-[12px] flex justify-center items-center">
                 <div className="w-[36px] h-[36px] flex justify-center items-center">
                   <FontAwesomeIcon icon={faPlus} />

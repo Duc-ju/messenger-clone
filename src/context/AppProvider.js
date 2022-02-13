@@ -46,7 +46,6 @@ function AuthProvider({ children }) {
   const [openToolTip, setOpenToolTip] = useState();
   const [openReactionList, setOpenReactionList] = useState();
   const [intervalID, setIntervalID] = useState();
-  const [openChangeRoomName, setOpenChangeRoomName] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -157,6 +156,13 @@ function AuthProvider({ children }) {
           setCurrentRoom(rooms[0]);
           addDocument("messages", {
             uid: user.uid,
+            rid: rooms[0].id,
+            displayName: user.displayName,
+            type: 'log1',
+            readed: [user.uid]
+          });
+          addDocument("messages", {
+            uid: user.uid,
             displayName: user.displayName,
             photoURL: user.photoURL,
             rid: rooms[0].id,
@@ -169,12 +175,13 @@ function AuthProvider({ children }) {
             like: [],
             readed: [user.uid],
           });
+          
           setMessageServerIsChanged(true);
         } else {
-          setRooms(rooms);
           let check = false;
           setCurrentRoom((oldRoom) => {
-            if (!oldRoom) {
+            let newRoom
+            if (oldRoom===undefined) {
               rooms.forEach((room) => {
                 if (
                   !check &&
@@ -184,7 +191,7 @@ function AuthProvider({ children }) {
                   room.lastestMessage.readed.filter((r) => r.uid === user.uid)
                     .length > 0
                 ) {
-                  setCurrentRoom(room);
+                  newRoom = room;
                   check = true;
                 }
               });
@@ -192,12 +199,14 @@ function AuthProvider({ children }) {
               check = false;
               rooms.forEach((room) => {
                 if (!check && room.id === oldRoom.id) {
-                  setCurrentRoom(room);
+                  newRoom = room;
                   check = true;
                 }
               });
             }
+            return newRoom
           });
+          setRooms(rooms);
           check = false;
           rooms.forEach((room) => {
             if (
@@ -254,9 +263,7 @@ function AuthProvider({ children }) {
         setOpenToolTip,
         openReactionList,
         setOpenReactionList,
-        setMessageServerIsChanged,
-        openChangeRoomName,
-        setOpenChangeRoomName,
+        setMessageServerIsChanged
       }}
     >
       {children}

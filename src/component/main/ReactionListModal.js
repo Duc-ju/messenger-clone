@@ -113,7 +113,7 @@ function ReactionList() {
                 key={renderData.id}
                 className="flex cursor-pointer justify-center items-center h-[60px]"
                 style={{
-                  color:
+                  borderBottom:
                     currentReaction && currentReaction.id === renderData.id
                       ? "3px solid #0099FF"
                       : "",
