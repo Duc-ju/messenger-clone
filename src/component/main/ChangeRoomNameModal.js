@@ -24,6 +24,7 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
           rid: currentRoom.id,
           displayName: user.displayName,
           type: "log2",
+          data: newName,
           readed: [user.uid],
         });
       }
@@ -33,7 +34,6 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
           rid: currentRoom.id,
           displayName: user.displayName,
           type: "log3",
-          data: newName,
           readed: [user.uid],
         });
       }
