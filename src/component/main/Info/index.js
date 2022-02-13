@@ -10,6 +10,7 @@ import {
   deleteObject 
 } from "firebase/storage";
 import { db } from '../../../firebase/config'
+import { addDocument } from "../../../firebase/services";
 import { getRoomName } from "../../../logic/getRoomName";
 import { getPhotoURL } from "../../../logic/getPhotoURL";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -64,6 +65,13 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
             roomRef.update({
                 photoURL: downloadURL,
                 photoDirectory: "images/" + fileName
+            });
+            addDocument("messages", {
+              uid: user.uid,
+              rid: currentRoom.id,
+              displayName: user.displayName,
+              type: "log4",
+              readed: [user.uid],
             });
         });
       }

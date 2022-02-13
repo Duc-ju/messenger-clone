@@ -13,19 +13,30 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
 
   const handleChangeRoomName = () => {
     let newName = nameInput.trim();
-    if (newName !== currentRoom.name && newName.length !== 0) {
+    if (newName !== currentRoom.name) {
       const roomRef = db.collection("rooms").doc(currentRoom.id);
       roomRef.update({
         displayName: newName,
       });
-      addDocument("messages", {
-        uid: user.uid,
-        rid: currentRoom.id,
-        displayName: user.displayName,
-        type: "log2",
-        data: newName,
-        readed: [user.uid],
-      });
+      if(newName.length !==0 ){
+        addDocument("messages", {
+          uid: user.uid,
+          rid: currentRoom.id,
+          displayName: user.displayName,
+          type: "log2",
+          readed: [user.uid],
+        });
+      }
+      else{
+        addDocument("messages", {
+          uid: user.uid,
+          rid: currentRoom.id,
+          displayName: user.displayName,
+          type: "log3",
+          data: newName,
+          readed: [user.uid],
+        });
+      }
       setOpenChangeRoomName(false);
     }
   };

@@ -25,14 +25,14 @@ function ChatBox() {
 
   return (
     <div>
-      {currentRoom && (
+      {currentRoom && !isOpenCreateRoom && (
         <>
           <Header />
           <Content focusControl={focusControl} />
           <Control focusControl={focusControl} setFocusControl={setFocusControl} />
         </>
       )}
-      {isOpenCreateRoom && (
+      {isOpenCreateRoom && !currentRoom && (
         <>
           <CreaHeader />
           {searchRoom ? <Content /> : <CreContent />}

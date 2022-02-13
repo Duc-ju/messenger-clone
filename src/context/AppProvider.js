@@ -154,12 +154,13 @@ function AuthProvider({ children }) {
         if (messagePending) {
           setIsOpenCreateRoom(false);
           setCurrentRoom(rooms[0]);
+          setIsOpenCreateRoom(false);
           addDocument("messages", {
             uid: user.uid,
             rid: rooms[0].id,
             displayName: user.displayName,
-            type: 'log1',
-            readed: [user.uid]
+            type: "log1",
+            readed: [user.uid],
           });
           addDocument("messages", {
             uid: user.uid,
@@ -175,37 +176,46 @@ function AuthProvider({ children }) {
             like: [],
             readed: [user.uid],
           });
-          
+
           setMessageServerIsChanged(true);
         } else {
+          if(!isOpenCreateRoom){
+            
+          }
           let check = false;
-          setCurrentRoom((oldRoom) => {
-            let newRoom
-            if (oldRoom===undefined) {
-              rooms.forEach((room) => {
-                if (
-                  !check &&
-                  room &&
-                  room.lastestMessage &&
-                  room.lastestMessage.readed &&
-                  room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                    .length > 0
-                ) {
-                  newRoom = room;
-                  check = true;
+          setIsOpenCreateRoom(oldState => {
+            if(!oldState){
+              setCurrentRoom((oldRoom) => {
+                let newRoom;
+                if (oldRoom === undefined) {
+                  rooms.forEach((room) => {
+                    if (
+                      !check &&
+                      room &&
+                      room.lastestMessage &&
+                      room.lastestMessage.readed &&
+                      room.lastestMessage.readed.filter((r) => r.uid === user.uid)
+                        .length > 0
+                    ) {
+                      newRoom = room;
+                      check = true;
+                    }
+                  });
+                } else {
+                  check = false;
+                  rooms.forEach((room) => {
+                    if (!check && room.id === oldRoom.id) {
+                      newRoom = room;
+                      check = true;
+                    }
+                  });
                 }
-              });
-            } else {
-              check = false;
-              rooms.forEach((room) => {
-                if (!check && room.id === oldRoom.id) {
-                  newRoom = room;
-                  check = true;
-                }
+                return newRoom;
               });
             }
-            return newRoom
-          });
+            return oldState
+          })
+          
           setRooms(rooms);
           check = false;
           rooms.forEach((room) => {
@@ -263,7 +273,7 @@ function AuthProvider({ children }) {
         setOpenToolTip,
         openReactionList,
         setOpenReactionList,
-        setMessageServerIsChanged
+        setMessageServerIsChanged,
       }}
     >
       {children}

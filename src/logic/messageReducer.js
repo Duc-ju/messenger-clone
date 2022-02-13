@@ -140,6 +140,5 @@ export function messageReducer(messages, room, uid) {
       );
     }
   }
-  console.log(newMess);
   return newMess;
 }
