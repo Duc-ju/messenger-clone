@@ -19,7 +19,6 @@
 }
 .container::after {
   z-index: 0;
-  margin-top: 76px;
   content: "";
   position: absolute;
   left: 0;

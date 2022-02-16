@@ -7,6 +7,6 @@ const log = {
 }
 export function getMessageLog(message, user){
     const header = message.uid===user.uid? 'Bạn ': message.displayName+' '
-    if(message.type === 'log2') return header + log['log2'] + message.data;
+    if(message.type === 'log2') return header + log['log2'] + message.data +'.';
     return header+log[message.type]
 }

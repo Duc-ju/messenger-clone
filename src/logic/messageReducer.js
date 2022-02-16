@@ -1,7 +1,11 @@
 export function messageReducer(messages, room, uid) {
-  if (!room) return [];
+  if (!room) return {
+    messages: [],
+  };
   messages = messages.filter((message) => message && message.createAt);
-  if (!messages || !messages.length) return [];
+  if (!messages || !messages.length) return {
+    messages: [],
+  };
   let newMess = [];
   if(messages[0].type){
     newMess = [
@@ -125,20 +129,18 @@ export function messageReducer(messages, room, uid) {
       j++;
     }
   }
-  if (newMess.length > 0) {
-    let lastestMessage
-    for(let i=newMess.length-1; i>=0; i--){
-      if(newMess[i].type===undefined){
-        lastestMessage = newMess[i]
-        break
-      }
-    }
-    if(lastestMessage&&lastestMessage.contents){
-      lastestMessage.contents[lastestMessage.contents.length - 1].readed =
-        messages[messages.length - 1].readed.map(
-          (uid) => room.members.filter((m) => m.uid === uid)[0]
-      );
+  let lastMessage
+  if(messages.length>0){
+    let newMessages =  messages.filter(message => message.type === undefined)
+    let messageTmp
+    if(newMessages.length>0) messageTmp = newMessages[newMessages.length-1]
+    lastMessage = {
+      id: messageTmp.id,
+      readed: messageTmp.readed.map(uid => room.members.filter((m) => m.uid === uid)[0])
     }
   }
-  return newMess;
+  return {
+    messages: newMess,
+    lastMessage
+  };
 }

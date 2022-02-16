@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, } from "react";
 import { AppContext } from "../../context/AppProvider";
 import { AuthContext } from "../../context/AuthProvider";
 import { db } from "../../firebase/config";
@@ -10,7 +10,6 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
   const { currentRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
   const [nameInput, setNameInput] = useState(currentRoom.displayName || "");
-
   const handleChangeRoomName = () => {
     let newName = nameInput.trim();
     if (newName !== currentRoom.displayName) {
@@ -40,6 +39,9 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
     }
     setOpenChangeRoomName(false);
   };
+  const handlekeyUp = (e) => {
+    if(e.code === 'Enter') handleChangeRoomName()
+  }
   return (
     <div className="fixed top-0 right-[0] flex justify-center items-center bottom-0 left-0 z-[1000] before:top-0 before:absolute before:content-[''] before:right-[0] before:bottom-0 before:left-0 before:bg-[#fff] before:opacity-[60%] before:z-[0]">
       <div className="relative z-[1000] bg-white border w-[548px] shadow rounded-[8px]">
@@ -79,6 +81,7 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
                       className="outline-[0] block w-full text-[1rem] leading-[1.25]"
                       onChange={(e) => setNameInput(e.target.value)}
                       value={nameInput}
+                      onKeyUp={handlekeyUp}
                     />
                   </div>
                 </div>

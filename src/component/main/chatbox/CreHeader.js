@@ -6,7 +6,7 @@ import { fetchUserList } from "../../../logic/fetchUserList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-function CreaHeader() {
+function CreaHeader({ setTop }) {
   const [searchName, setSearchName] = useState('');
   const [results, setResults] = useState([]);
   const [isDispayResult, setIsDisplayResult] = useState(true)
@@ -20,11 +20,14 @@ function CreaHeader() {
         setResults(newResults);
     });
   };
+  const headerElement = useRef()
+
   useEffect(() => {
+    setTop(headerElement.current.offsetHeight)
     fetchUserList('', choosers , user).then((newResults) => {
       setResults(newResults);
     });
-  },[choosers])
+  },[choosers, user])
   useEffect(() =>{
     const handleClick = ({ target })=>{
         if(!resultElement.current?.contains(target)&&!inputElement.current?.contains(target)){
@@ -39,6 +42,10 @@ function CreaHeader() {
 },[])
   const handleAddChooser = (newChooser) => {
     setChoosers(oldChoosers => {
+      if(oldChoosers.length===9){
+        alert('Bạn chỉ có thể tạo phòng dưới 10 thành viên')
+        return oldChoosers
+      }
       const newChoosers = [...oldChoosers,newChooser]
 
       const testChoosers = [...newChoosers,user]
@@ -90,16 +97,19 @@ function CreaHeader() {
   }
 
   return (
-    <div className="border-b fixed top-0 bg-white border-r z-[1000] w-full">
-      <div className="h-[56px] flex items-center px-[16px]">
+    <div 
+    className="border-b bg-white border-r z-[1000] py-[5px] relative"
+    ref={headerElement}
+    >
+      <div className="flex items-center px-[16px]">
         <div className="flex flex-row w-full">
-          <div className="text-[15px] flex items-center">
+          <div className="text-[15px] flex items-center py-[15px]">
               <div>Đến:</div>
           </div>
-          <ul className="inline-flex flex-row">
+          <ul className="inline-flex items-center flex-wrap">
               {choosers.map(chooser => (
                 <li 
-                className="inline-block w-max ml-[8px] py-[4px] pl-[8px] bg-[#E7F3FF] text-[#0099FF] font-semibold rounded-[6px]"
+                className="inline-block my-[5px] ml-[8px] py-[4px] pl-[8px] bg-[#E7F3FF] text-[#0099FF] font-semibold rounded-[6px]"
                 key={chooser.uid}
                 >
                     <span>{chooser.displayName}</span>
@@ -111,10 +121,9 @@ function CreaHeader() {
                     </span>
                 </li>
               ))}
-          </ul>
-          <span className="flex items-center w-full ml-[10px] relative">
+              <span className="flex items-center grow ml-[10px] relative">
             <input
-                className="outline-0 text-base"
+                className="outline-0 text-base w-full"
                 onChange={(e) => setSearchName(e.target.value)}
                 onKeyUp={handleSearch}
                 autoFocus
@@ -150,6 +159,8 @@ function CreaHeader() {
                 </ul>
             </div>}
           </span>
+          </ul>
+          
         </div>
       </div>
       

@@ -12,8 +12,8 @@ import { AuthContext } from "../../../context/AuthProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
-function Content({ focusControl }) {
-  const [height, setHeight] = useState(window.innerHeight - 139);
+function Content({ focusControl, top=76 , bottom=65 }) {
+  const [height, setHeight] = useState(window.innerHeight - top - bottom);
   const contentElement = useRef();
   const {
     currentRoom,
@@ -26,14 +26,15 @@ function Content({ focusControl }) {
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
-  const room = currentRoom || searchRoom;
+  const room = currentRoom || searchRoom
   const messageCondition = useMemo(() => {
     return {
       fieldName: "rid",
       operator: "==",
-      compareValue: room.id,
+      compareValue: currentRoom?currentRoom.id:searchRoom.id,
     };
-  }, [room]);
+  }, [currentRoom,searchRoom]);
+
   const messages = useFirestore("messages", messageCondition);
 
   useEffect(() => {
@@ -50,17 +51,21 @@ function Content({ focusControl }) {
       });
       if (check) setMessageServerIsChanged(true);
     }
-  }, [messages, focusControl]);
+  }, [messages, focusControl, user.uid]);
+
+  useEffect(() => {
+    setHeight(window.innerHeight - top - bottom);
+  }, [top,bottom])
 
   useEffect(() => {
     function handleResize() {
-      setHeight(window.innerHeight - 139);
+      setHeight(window.innerHeight - top - bottom);
     }
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [top,bottom]);
 
   const handleToggleReactControl = (e, content) => {
     setOpenToolTip();
@@ -141,25 +146,11 @@ function Content({ focusControl }) {
   }, [contentElement.current]);
 
   const messageRender = messageReducer(messages, room, user.uid);
-  const getLastMessageContent = () => {
-    if (!messageRender || !messageRender.length) return;
-    let lastMessage;
-    for (let i = messageRender.length - 1; i >= 0; i--) {
-      if (messageRender[i].type === undefined) {
-        lastMessage = messageRender[i];
-        break;
-      }
-    }
-    if(lastMessage){
-      const lastMessageContents = lastMessage.contents;
-      return lastMessageContents[lastMessageContents.length - 1];
-    }
-  };
-  const lastMessage = getLastMessageContent();
+
   return (
-    <div className="mt-[76px] container">
+    <div className="container relative z-10 grow">
       <div
-        className="w-full overflow-y-scroll snap-y relative bg-white flex flex-col justify-between"
+        className="w-full h-full overflow-y-scroll snap-y relative bg-white flex flex-col justify-between"
         ref={contentElement}
         style={{
           height: `${height}px`,
@@ -216,10 +207,11 @@ function Content({ focusControl }) {
           <p className="text-[.8125rem]">Cùng bắt đầu cuộc trò chuyện</p>
         </div>
         <div className="relative">
-          {messageRender.map((message) => {
+          {messageRender.messages.map((message) => {
             if (message.type) {
               return <LogMessage key={message.id} message={message} />;
-            } else if (!message.isOwnMess) {
+            }
+            if (!message.type&&!message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
                   {message.isShowTime && (
@@ -435,9 +427,9 @@ function Content({ focusControl }) {
                     </ul>
                   </div>
                   <div className="h-[7px] invisible"></div>
-                  {lastMessage && lastMessage.readed.length > 0 && lastMessage.id===message.id && (
+                  {messageRender.lastMessage && messageRender.lastMessage.readed.length > 0 && messageRender.lastMessage.id===message.id && (
                     <div className="flex justify-end mr-[6px] relative z-[10]">
-                      {lastMessage.readed
+                      {messageRender.lastMessage.readed
                         .filter((r) => r !== undefined)
                         .filter((r) => r.uid !== user.uid)
                         .slice(0, 4)
@@ -453,7 +445,8 @@ function Content({ focusControl }) {
                   )}
                 </div>
               );
-            } else {
+            } 
+            if(!message.type&&message.isOwnMess) {
               return (
                 <div key={message.id}>
                   {message.isShowTime && (
@@ -634,25 +627,26 @@ function Content({ focusControl }) {
                       })}
                     </ul>
                   </div>
-                  <div className="h-[7px] invisible"></div>
-                  {lastMessage &&
-                    lastMessage.readed.length === 1 &&
-                    lastMessage.readed[0].uid === user.uid &&
+                  <div className="h-[7px] invisible relative z-[10]"></div>
+                  {messageRender.lastMessage &&
+                    messageRender.lastMessage.readed.length === 1 &&
+                    messageRender.lastMessage.readed[0].uid === user.uid &&
+                    messageRender.lastMessage.id === message.contents[message.contents.length-1].id &&
                     (<div className="flex justify-end mr-[6px] relative z-[10]">
                         <div
                           className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
                           style={{
                             bottom:
-                              countReaction(lastMessage) > 0 ? "32px" : "16px",
+                              countReaction(messageRender.lastMessage) > 0 ? "32px" : "16px",
                           }}
                         >
                           <FontAwesomeIcon icon={faCheckCircle} />
                         </div>
                       </div>
                     )}
-                  {lastMessage && lastMessage.readed.length && lastMessage.id===message.id && (
+                  {messageRender.lastMessage && messageRender.lastMessage.readed.length && messageRender.lastMessage.id===message.contents[message.contents.length-1].id && (
                     <div className="flex justify-end mr-[6px] relative z-[10]">
-                      {lastMessage.readed
+                      {messageRender.lastMessage.readed
                         .filter((r) => r !== undefined)
                         .filter((r) => r.uid !== user.uid)
                         .slice(0, 4)

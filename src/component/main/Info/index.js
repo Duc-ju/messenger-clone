@@ -41,6 +41,14 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
 
   const handleChooseFile = (e) => {
     const file = e.target.files[0];
+    if(file.type.split('/').length===0 || file.type.split('/')[0] !== 'image'){
+      alert('Vui lòng chọn file hình ảnh')
+      return
+    }
+    if(file.size > 1048576){
+      alert('Vui lòng chọn ảnh có kích thước dưới 1MB và tỉ lệ 1:1')
+      return
+    }
     const fileName = (Math.random()+'').split('.')[1]+file.name
     const storage = getStorage();
     if(window.location.hostname === 'localhost'){

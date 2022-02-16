@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useLayoutEffect, useRef } from "react";
 import { AppContext } from "../../../context/AppProvider";
 import { AuthContext } from "../../../context/AuthProvider";
 import { getRoomName } from "../../../logic/getRoomName";
@@ -10,16 +10,17 @@ import {
   faEllipsisH,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Header() {
+function Header({ setTop }) {
   const { currentRoom, openInfo, setOpenInfo } = useContext(AppContext);
   const { user } = useContext(AuthContext);
-
+  const headerElement = useRef()
+  useLayoutEffect(() => {
+    setTop(headerElement.current.offsetHeight)
+  },[])
   return (
     <div
-      className="border-b fixed top-0 bg-white border-r"
-      style={{
-        width: openInfo ? "47%" : "72%",
-      }}
+      className="border-b bg-white border-r w-full relative z-[10]"
+      ref={headerElement}
     >
       <div className="flex justify-between p-[12px] h-[76px]">
         <div className="flex">

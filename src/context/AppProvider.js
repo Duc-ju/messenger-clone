@@ -135,6 +135,8 @@ function AuthProvider({ children }) {
       });
       Promise.all(promises).then((rooms) => {
         rooms.sort((a, b) => {
+          if(!a.lastestMessage||!a.lastestMessage.createAt) return -1
+          if(!b.lastestMessage||!b.lastestMessage.createAt) return 1
           return (
             b.lastestMessage.createAt.seconds -
             a.lastestMessage.createAt.seconds
@@ -215,7 +217,6 @@ function AuthProvider({ children }) {
             }
             return oldState
           })
-          
           setRooms(rooms);
           check = false;
           rooms.forEach((room) => {
@@ -248,7 +249,7 @@ function AuthProvider({ children }) {
       });
     });
     return unsubcribe;
-  }, [roomCondition, messagePending, user, messageServerIsChanged]);
+  }, [roomCondition, messagePending, user, messageServerIsChanged, isOpenCreateRoom]);
 
   return (
     <AppContext.Provider

@@ -10,6 +10,7 @@ function ChatBox() {
   const { isOpenCreateRoom, currentRoom, choosers, searchRoom } =
     useContext(AppContext);
   const [focusControl, setFocusControl] = useState(true);
+  const [top, setTop] = useState();
   useEffect(() => {
     const handleVisibleChange = () => {
         setFocusControl(!document.hidden);
@@ -27,15 +28,15 @@ function ChatBox() {
     <div>
       {currentRoom && !isOpenCreateRoom && (
         <>
-          <Header />
-          <Content focusControl={focusControl} />
+          <Header setTop={setTop} />
+          <Content top={top} focusControl={focusControl} />
           <Control focusControl={focusControl} setFocusControl={setFocusControl} />
         </>
       )}
       {isOpenCreateRoom && !currentRoom && (
         <>
-          <CreaHeader />
-          {searchRoom ? <Content /> : <CreContent />}
+          <CreaHeader setTop={setTop} />
+          {searchRoom ? <Content top={top} /> : <CreContent />}
           {choosers.length > 0 && <Control focusControl={focusControl} setFocusControl={setFocusControl} />}
         </>
       )}

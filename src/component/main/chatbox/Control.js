@@ -111,7 +111,7 @@ function Control({ focusControl, setFocusControl }) {
 
   return (
     <div
-      className="fixed bottom-0 py-[12px] border-r bg-white"
+      className="fixed bottom-0 z-10 py-[12px] border-r bg-white"
       style={{
         width: openInfo ? "47%" : "72%",
       }}
