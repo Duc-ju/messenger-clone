@@ -36,7 +36,7 @@ function Tooltip() {
   }, []);
   return (
     <div
-      className="absolute z-[1000] w-max"
+      className='absolute z-[1000] w-max'
       style={{
         top: openToolTip.top,
         left: openToolTip.left,
@@ -44,11 +44,11 @@ function Tooltip() {
       ref={tooltipElement}
     >
       <div>
-        <ul className="bg-black rounded-[10px] opacity-[0.7] py-[6px] px-[10px] drop-shadow-lg">
+        <ul className='bg-black rounded-[10px] opacity-[0.7] py-[6px] px-[10px] drop-shadow-lg'>
           {openToolTip.data.map((a, index) => (
             <li
               key={index}
-              className="relative leading-[1.2727rem] text-[.6875rem] text-white h-full w-fit"
+              className='relative leading-[1.2727rem] text-[.6875rem] text-white h-full w-fit'
             >
               {a}
             </li>

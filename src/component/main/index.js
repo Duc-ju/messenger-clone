@@ -21,14 +21,14 @@ function Main() {
   const [openChangeRoomName, setOpenChangeRoomName] = useState(false);
   const [openAddMember, setOpenAddMember] = useState(false);
   return (
-    <div className="overflow-hidden">
-      <div className="flex">
-        <div className="w-[28%] relative z-10">
+    <div className='overflow-hidden'>
+      <div className='flex'>
+        <div className='w-[28%] relative z-10'>
           <Control />
         </div>
         {(currentRoom || isOpenCreateRoom) && (
           <div
-            className="relative z-0"
+            className='relative z-0'
             style={{
               width: openInfo ? '47%' : '72%',
             }}

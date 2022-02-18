@@ -422,7 +422,7 @@ function ReactControl() {
 
   return (
     <div
-      className="absolute z-[1000] bottom-full mb-[-4px]"
+      className='absolute z-[1000] bottom-full mb-[-4px]'
       style={{
         top: openReactControl.top - 52,
         left:
@@ -432,13 +432,13 @@ function ReactControl() {
       }}
     >
       <div
-        className="flex justify-center items-center h-[52px] w-max drop-shadow-xl bg-white rounded-[24px] px-[12px] py-[8px]"
+        className='flex justify-center items-center h-[52px] w-max drop-shadow-xl bg-white rounded-[24px] px-[12px] py-[8px]'
         ref={reacElement}
       >
         <div>
           <img
             src={process.env.PUBLIC_URL + '/img/love.png'}
-            alt=""
+            alt=''
             style={{
               backgroundColor:
                 openReactControl.content.love.filter((l) => l.uid === user.uid)
@@ -446,7 +446,7 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleLove}
           />
         </div>
@@ -460,8 +460,8 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            alt=""
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            alt=''
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleHaha}
           />
         </div>
@@ -475,8 +475,8 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            alt=""
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            alt=''
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleWow}
           />
         </div>
@@ -490,8 +490,8 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            alt=""
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            alt=''
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleSad}
           />
         </div>
@@ -505,8 +505,8 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            alt=""
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            alt=''
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleAngry}
           />
         </div>
@@ -520,8 +520,8 @@ function ReactControl() {
                   ? '#eee'
                   : '',
             }}
-            alt=""
-            className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
+            alt=''
+            className='w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer'
             onClick={handleLike}
           />
         </div>

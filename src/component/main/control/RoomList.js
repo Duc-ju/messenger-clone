@@ -75,52 +75,52 @@ function RoomList() {
 
   return (
     <div
-      className="mt-[138px] px-[8px] overflow-y-scroll snap-y relative z-0"
+      className='mt-[138px] px-[8px] overflow-y-scroll snap-y relative z-0'
       style={{
         height: `${height}px`,
       }}
-      id="style-7"
+      id='style-7'
     >
       <ul>
         {isOpenCreateRoom && (
-          <li className="p-[8px] rounded-[8px] hover:bg-[#f5f5f5] cursor-pointer">
-            <div className="grid grid-cols-10">
-              <div className="col-span-2">
+          <li className='p-[8px] rounded-[8px] hover:bg-[#f5f5f5] cursor-pointer'>
+            <div className='grid grid-cols-10'>
+              <div className='col-span-2'>
                 {choosers.length === 0 && (
                   <img
                     src={getPhotoURL()}
-                    alt=""
-                    className="w-[56px] h-[56px] rounded-full"
+                    alt=''
+                    className='w-[56px] h-[56px] rounded-full'
                   />
                 )}
                 {choosers.length === 1 && (
                   <img
                     src={getPhotoURL(choosers[0])}
-                    alt=""
-                    className="w-[56px] h-[56px] rounded-full"
+                    alt=''
+                    className='w-[56px] h-[56px] rounded-full'
                   />
                 )}
                 {choosers.length > 1 && (
-                  <div className="relative w-[56px] h-[56px]">
-                    <div className="absolute right-0 top-0">
+                  <div className='relative w-[56px] h-[56px]'>
+                    <div className='absolute right-0 top-0'>
                       <img
                         src={getPhotoURL(choosers[0])}
-                        alt=""
-                        className="w-[38px] h-[38px] rounded-full"
+                        alt=''
+                        className='w-[38px] h-[38px] rounded-full'
                       />
                     </div>
-                    <div className="absolute left-0 bottom-0">
+                    <div className='absolute left-0 bottom-0'>
                       <img
                         src={getPhotoURL(choosers[1])}
-                        alt=""
-                        className="w-[38px] h-[38px] rounded-full border-2 border-white"
+                        alt=''
+                        className='w-[38px] h-[38px] rounded-full border-2 border-white'
                       />
                     </div>
                   </div>
                 )}
               </div>
-              <div className="col-span-7 text-left flex items-center">
-                <h3 className="text-[.9375rem] font-medium">
+              <div className='col-span-7 text-left flex items-center'>
+                <h3 className='text-[.9375rem] font-medium'>
                   Tin nhắn mới{' '}
                   <span>
                     {choosers.length > 0 &&
@@ -128,9 +128,9 @@ function RoomList() {
                   </span>
                 </h3>
               </div>
-              <div className="col-span-1 flex items-center justify-end">
+              <div className='col-span-1 flex items-center justify-end'>
                 <div
-                  className="hover:bg-[#eee] rounded-full flex items-center justify-center w-[24px] h-[24px] text-[12px]"
+                  className='hover:bg-[#eee] rounded-full flex items-center justify-center w-[24px] h-[24px] text-[12px]'
                   onClick={handleToggerCreateRoom}
                 >
                   <FontAwesomeIcon icon={faTimes} />
@@ -142,15 +142,15 @@ function RoomList() {
         {rooms.map((room) => (
           <li
             key={room.id}
-            className="p-[8px] rounded-[8px] hover:bg-[#f5f5f5] cursor-pointer"
+            className='p-[8px] rounded-[8px] hover:bg-[#f5f5f5] cursor-pointer'
             style={{
               backgroundColor:
                 currentRoom && currentRoom.id === room.id ? '#f5f5f5' : '',
             }}
             onClick={() => handleChooseRoom(room)}
           >
-            <div className="grid grid-cols-10 relative">
-              <div className="col-span-2">
+            <div className='grid grid-cols-10 relative'>
+              <div className='col-span-2'>
                 {room.members.length === 2 && (
                   <img
                     src={getPhotoURL(
@@ -158,47 +158,47 @@ function RoomList() {
                         (member) => member.uid !== user.uid
                       )[0]
                     )}
-                    alt=""
-                    className="w-[56px] h-[56px] rounded-full"
+                    alt=''
+                    className='w-[56px] h-[56px] rounded-full'
                   />
                 )}
                 {room.members.length > 2 && room.photoURL && (
                   <img
                     src={room.photoURL}
-                    alt=""
-                    className="w-[56px] h-[56px] rounded-full"
+                    alt=''
+                    className='w-[56px] h-[56px] rounded-full'
                   />
                 )}
                 {room.members.length > 2 && !room.photoURL && (
-                  <div className="relative w-[56px] h-[56px]">
-                    <div className="absolute right-0 top-0">
+                  <div className='relative w-[56px] h-[56px]'>
+                    <div className='absolute right-0 top-0'>
                       <img
                         src={getPhotoURL(
                           room.members.filter(
                             (member) => member.uid !== user.uid
                           )[0]
                         )}
-                        alt=""
-                        className="w-[38px] h-[38px] rounded-full"
+                        alt=''
+                        className='w-[38px] h-[38px] rounded-full'
                       />
                     </div>
-                    <div className="absolute left-0 bottom-0">
+                    <div className='absolute left-0 bottom-0'>
                       <img
                         src={getPhotoURL(
                           room.members.filter(
                             (member) => member.uid !== user.uid
                           )[1]
                         )}
-                        alt=""
-                        className="w-[38px] h-[38px] rounded-full border-2 border-white"
+                        alt=''
+                        className='w-[38px] h-[38px] rounded-full border-2 border-white'
                       />
                     </div>
                   </div>
                 )}
               </div>
-              <div className="col-span-8 text-left">
+              <div className='col-span-8 text-left'>
                 <h3
-                  className="text-[.9375rem]"
+                  className='text-[.9375rem]'
                   style={{
                     fontWeight:
                       room.lastestMessage &&
@@ -225,7 +225,7 @@ function RoomList() {
                           : '',
                     }}
                   >
-                    <span className="text-[.8125rem]">
+                    <span className='text-[.8125rem]'>
                       {room.lastestMessage.content
                         ? (room.lastestMessage.uid === user.uid
                             ? 'Bạn'
@@ -237,9 +237,9 @@ function RoomList() {
                             18
                           )}
                     </span>
-                    <span className="mx-[6px]">·</span>
+                    <span className='mx-[6px]'>·</span>
                     {room.lastestMessage.createAt && (
-                      <span className="text-[.8125rem]">
+                      <span className='text-[.8125rem]'>
                         {getRangeOfTimeToCurrent(
                           room.lastestMessage.createAt.seconds
                         )}
@@ -249,7 +249,7 @@ function RoomList() {
                 )}
               </div>
               {room.lastestMessage && (
-                <div className="right-0 top-[50%] translate-y-[-50%] absolute flex items-center justify-end text-[#8A8D91]">
+                <div className='right-0 top-[50%] translate-y-[-50%] absolute flex items-center justify-end text-[#8A8D91]'>
                   {room.lastestMessage.uid === user.uid &&
                     room.lastestMessage.readed.length === 1 && (
                       <FontAwesomeIcon icon={faCheckCircle} />
@@ -262,8 +262,8 @@ function RoomList() {
                         <img
                           key={r.uid}
                           src={getPhotoURL(r)}
-                          className="w-[16px] h-[16px] rounded-full"
-                          alt=""
+                          className='w-[16px] h-[16px] rounded-full'
+                          alt=''
                           style={{
                             transform:
                               arr.length > 1 && index < arr.length - 1
@@ -281,8 +281,8 @@ function RoomList() {
                       .length === 0 && (
                       <img
                         src={process.env.PUBLIC_URL + '/img/active.png'}
-                        className="w-[8px] h-[8px]"
-                        alt=""
+                        className='w-[8px] h-[8px]'
+                        alt=''
                       />
                     )}
                 </div>

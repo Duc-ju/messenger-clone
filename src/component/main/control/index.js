@@ -9,17 +9,17 @@ function Control() {
   const { rooms } = useContext(AppContext);
 
   return (
-    <div className="border">
+    <div className='border'>
       <Header />
       {rooms && <RoomList />}
-      <div className="z-50 border-t border-r fixed bottom-0 bg-white w-[28%]">
-        <div className="text-center">
+      <div className='z-50 border-t border-r fixed bottom-0 bg-white w-[28%]'>
+        <div className='text-center'>
           <a
-            href="https://www.messenger.com/desktop/"
-            className="inline-block p-2 font-semibold w-full"
+            href='https://www.messenger.com/desktop/'
+            className='inline-block p-2 font-semibold w-full'
           >
-            <div className="p-2 hover:bg-[#eee] rounded-[8px] w-full">
-              <FontAwesomeIcon className="mr-[8px]" icon={faDownload} />
+            <div className='p-2 hover:bg-[#eee] rounded-[8px] w-full'>
+              <FontAwesomeIcon className='mr-[8px]' icon={faDownload} />
               Cài đặt ứng dụng Messenger
             </div>
           </a>

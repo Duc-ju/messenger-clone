@@ -103,32 +103,32 @@ function CreaHeader({ setTop }) {
 
   return (
     <div
-      className="border-b bg-white border-r z-[1000] py-[5px] relative"
+      className='border-b bg-white border-r z-[1000] py-[5px] relative'
       ref={headerElement}
     >
-      <div className="flex items-center px-[16px]">
-        <div className="flex flex-row w-full">
-          <div className="text-[15px] flex items-center py-[15px]">
+      <div className='flex items-center px-[16px]'>
+        <div className='flex flex-row w-full'>
+          <div className='text-[15px] flex items-center py-[15px]'>
             <div>Đến:</div>
           </div>
-          <ul className="inline-flex items-center flex-wrap">
+          <ul className='inline-flex items-center flex-wrap'>
             {choosers.map((chooser) => (
               <li
-                className="inline-block my-[5px] ml-[8px] py-[4px] pl-[8px] bg-[#E7F3FF] text-[#0099FF] font-semibold rounded-[6px]"
+                className='inline-block my-[5px] ml-[8px] py-[4px] pl-[8px] bg-[#E7F3FF] text-[#0099FF] font-semibold rounded-[6px]'
                 key={chooser.uid}
               >
                 <span>{chooser.displayName}</span>
                 <span
-                  className="hover:bg-[#ddd] rounded-full inline-flex items-center justify-center w-[28px] h-[28px] text-[12px] ml-[2px]"
+                  className='hover:bg-[#ddd] rounded-full inline-flex items-center justify-center w-[28px] h-[28px] text-[12px] ml-[2px]'
                   onClick={() => handleRemoveChooser(chooser)}
                 >
                   <FontAwesomeIcon icon={faTimes} />
                 </span>
               </li>
             ))}
-            <span className="flex items-center grow ml-[10px] relative">
+            <span className='flex items-center grow ml-[10px] relative'>
               <input
-                className="outline-0 text-base w-full"
+                className='outline-0 text-base w-full'
                 onChange={(e) => setSearchName(e.target.value)}
                 onKeyUp={handleSearch}
                 autoFocus
@@ -138,7 +138,7 @@ function CreaHeader({ setTop }) {
               />
               {isDispayResult && (
                 <div
-                  className="absolute left-[0] top-[36px] p-[8px] rounded-[8px] shadow bg-white w-[329px] h-[407px] overflow-y-auto"
+                  className='absolute left-[0] top-[36px] p-[8px] rounded-[8px] shadow bg-white w-[329px] h-[407px] overflow-y-auto'
                   ref={resultElement}
                 >
                   <ul>
@@ -146,17 +146,17 @@ function CreaHeader({ setTop }) {
                       return (
                         <li key={result.uid}>
                           <div
-                            className="cursor-pointer flex items-center p-[8px] rounded-[8px] hover:bg-[#eee]"
+                            className='cursor-pointer flex items-center p-[8px] rounded-[8px] hover:bg-[#eee]'
                             onClick={() => handleAddChooser(result)}
                           >
-                            <div className="">
+                            <div className=''>
                               <img
                                 src={getPhotoURL(result)}
-                                alt=""
-                                className="w-[36px] h-[36px] rounded-full"
+                                alt=''
+                                className='w-[36px] h-[36px] rounded-full'
                               />
                             </div>
-                            <div className="p-[6px]">{result.displayName}</div>
+                            <div className='p-[6px]'>{result.displayName}</div>
                           </div>
                         </li>
                       );

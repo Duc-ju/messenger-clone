@@ -110,42 +110,42 @@ function Control({ focusControl, setFocusControl }) {
 
   return (
     <div
-      className="fixed bottom-0 z-10 py-[12px] border-r bg-white"
+      className='fixed bottom-0 z-10 py-[12px] border-r bg-white'
       style={{
         width: openInfo ? '47%' : '72%',
       }}
     >
-      <div className="flex">
-        <div className="mx-[6px] flex justify-around">
-          <div className="flex items-center">
-            <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]">
+      <div className='flex'>
+        <div className='mx-[6px] flex justify-around'>
+          <div className='flex items-center'>
+            <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'>
               <FontAwesomeIcon icon={faPlusCircle} />
             </div>
           </div>
           {!isTyped && (
-            <div className="flex items-center">
-              <div className="flex items-center">
-                <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]">
+            <div className='flex items-center'>
+              <div className='flex items-center'>
+                <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'>
                   <FontAwesomeIcon icon={faImage} />
                 </div>
               </div>
-              <div className="flex items-center">
-                <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]">
+              <div className='flex items-center'>
+                <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'>
                   <FontAwesomeIcon icon={faStickyNote} />
                 </div>
               </div>
-              <div className="flex items-center">
-                <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]">
+              <div className='flex items-center'>
+                <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'>
                   <FontAwesomeIcon icon={faGift} />
                 </div>
               </div>
             </div>
           )}
         </div>
-        <div className="w-full flex items-center relative">
+        <div className='w-full flex items-center relative'>
           <input
-            type="text"
-            placeholder="Aa"
+            type='text'
+            placeholder='Aa'
             ref={inputElement}
             onChange={(e) => handleChange(e)}
             onKeyUp={(e) => handleSubmit(e)}
@@ -153,16 +153,16 @@ function Control({ focusControl, setFocusControl }) {
             onBlur={() => setFocusControl(false)}
             autoFocus
             value={message}
-            className="w-full pt-[7px] pl-[12px] pr-[6px] pb-[9px] text-[0.9375rem] rounded-[50px] outline-none bg-[#eee]"
+            className='w-full pt-[7px] pl-[12px] pr-[6px] pb-[9px] text-[0.9375rem] rounded-[50px] outline-none bg-[#eee]'
           />
-          <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee] absolute right-0">
+          <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee] absolute right-0'>
             <FontAwesomeIcon icon={faSmile} />
           </div>
         </div>
         {isTyped && (
-          <div className="w-[40px] flex items-center mx-[6px]">
+          <div className='w-[40px] flex items-center mx-[6px]'>
             <div
-              className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]"
+              className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'
               onClick={handleButtonSubmit}
             >
               <FontAwesomeIcon icon={faPaperPlane} />
@@ -170,8 +170,8 @@ function Control({ focusControl, setFocusControl }) {
           </div>
         )}
         {!isTyped && (
-          <div className="w-[40px] flex items-center mx-[6px]">
-            <div className="text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]">
+          <div className='w-[40px] flex items-center mx-[6px]'>
+            <div className='text-[#00e5ff] cursor-pointer inline-flex justify-center items-center w-[36px] h-[36px] rounded-full hover:bg-[#eee]'>
               <FontAwesomeIcon icon={faThumbsUp} />
             </div>
           </div>
