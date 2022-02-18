@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef, useContext, useMemo } from "react";
-import LogMessage from "./LogMessage";
-import { getPhotoURL } from "../../../logic/getPhotoURL";
-import { getRoomName } from "../../../logic/getRoomName";
-import { countReaction } from "../../../logic/countReaction";
-import { convertTime } from "../../../logic/convertTime";
-import { messageReducer } from "../../../logic/messageReducer";
-import { db } from "../../../firebase/config";
-import useFirestore from "../../../hooks/useFirestore";
-import { AppContext } from "../../../context/AppProvider";
-import { AuthContext } from "../../../context/AuthProvider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSmile, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import LogMessage from './LogMessage';
+import { getPhotoURL } from '../../../logic/getPhotoURL';
+import { getRoomName } from '../../../logic/getRoomName';
+import { countReaction } from '../../../logic/countReaction';
+import { convertTime } from '../../../logic/convertTime';
+import { messageReducer } from '../../../logic/messageReducer';
+import { db } from '../../../firebase/config';
+import useFirestore from '../../../hooks/useFirestore';
+import { AppContext } from '../../../context/AppProvider';
+import { AuthContext } from '../../../context/AuthProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSmile, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
-function Content({ focusControl, top=76 , bottom=65 }) {
+function Content({ focusControl, top = 76, bottom = 65 }) {
   const [height, setHeight] = useState(window.innerHeight - top - bottom);
   const contentElement = useRef();
   const {
@@ -26,23 +26,23 @@ function Content({ focusControl, top=76 , bottom=65 }) {
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
-  const room = currentRoom || searchRoom
+  const room = currentRoom || searchRoom;
   const messageCondition = useMemo(() => {
     return {
-      fieldName: "rid",
-      operator: "==",
-      compareValue: currentRoom?currentRoom.id:searchRoom.id,
+      fieldName: 'rid',
+      operator: '==',
+      compareValue: currentRoom ? currentRoom.id : searchRoom.id,
     };
-  }, [currentRoom,searchRoom]);
+  }, [currentRoom, searchRoom]);
 
-  const messages = useFirestore("messages", messageCondition);
+  const messages = useFirestore('messages', messageCondition);
 
   useEffect(() => {
     if (focusControl) {
       let check = false;
       messages.forEach((message) => {
         if (!message.readed.includes(user.uid)) {
-          const messageRef = db.collection("messages").doc(message.id);
+          const messageRef = db.collection('messages').doc(message.id);
           messageRef.update({
             readed: [...message.readed, user.uid],
           });
@@ -55,17 +55,17 @@ function Content({ focusControl, top=76 , bottom=65 }) {
 
   useEffect(() => {
     setHeight(window.innerHeight - top - bottom);
-  }, [top,bottom])
+  }, [top, bottom]);
 
   useEffect(() => {
     function handleResize() {
       setHeight(window.innerHeight - top - bottom);
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [top,bottom]);
+  }, [top, bottom]);
 
   const handleToggleReactControl = (e, content) => {
     setOpenToolTip();
@@ -91,7 +91,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
 
   const handleOpenTimeTooltip = (e, time) => {
     setOpenToolTip({
-      type: "left",
+      type: 'left',
       top: e.target.getBoundingClientRect().top,
       left: e.target.getBoundingClientRect().left,
       height: e.target.offsetHeight,
@@ -109,7 +109,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
       ...content.like.map((user) => user.displayName),
     ];
     setOpenToolTip({
-      type: "top",
+      type: 'top',
       top: e.target.getBoundingClientRect().top,
       left: e.target.getBoundingClientRect().left,
       height: e.target.offsetHeight,
@@ -142,7 +142,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
     const handleScroll = () => {
       setOpenReactControl();
     };
-    contentElement.current.addEventListener("scroll", handleScroll);
+    contentElement.current.addEventListener('scroll', handleScroll);
   }, [contentElement.current]);
 
   const messageRender = messageReducer(messages, room, user.uid);
@@ -211,7 +211,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
             if (message.type) {
               return <LogMessage key={message.id} message={message} />;
             }
-            if (!message.type&&!message.isOwnMess) {
+            if (!message.type && !message.isOwnMess) {
               return (
                 <div key={message.id} className="relative z-10">
                   {message.isShowTime && (
@@ -232,8 +232,8 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                           countReaction(
                             message.contents[message.contents.length - 1]
                           ) > 0
-                            ? "18px"
-                            : "",
+                            ? '18px'
+                            : '',
                       }}
                     >
                       <img
@@ -246,13 +246,13 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                       {message.contents.map((content, index) => {
                         const style = {};
                         if (message.contents.length === 1) {
-                          style.borderTopLeftRadius = "18px";
-                          style.borderBottomLeftRadius = "18px";
+                          style.borderTopLeftRadius = '18px';
+                          style.borderBottomLeftRadius = '18px';
                         }
                         if (message.contents.length >= 2) {
-                          if (index === 0) style.borderTopLeftRadius = "18px";
+                          if (index === 0) style.borderTopLeftRadius = '18px';
                           if (index === message.contents.length - 1)
-                            style.borderBottomLeftRadius = "18px";
+                            style.borderBottomLeftRadius = '18px';
                         }
                         return (
                           <li
@@ -282,8 +282,8 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         left:
                                           content.message.length < 10 &&
                                           countReaction(content) > 3
-                                            ? "0"
-                                            : "",
+                                            ? '0'
+                                            : '',
                                       }}
                                     >
                                       <ul
@@ -303,7 +303,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/love.png"
+                                                '/img/love.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -315,7 +315,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/haha.png"
+                                                '/img/haha.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -327,7 +327,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/wow.png"
+                                                '/img/wow.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -339,7 +339,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/sad.png"
+                                                '/img/sad.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -351,7 +351,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/angry.png"
+                                                '/img/angry.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -363,7 +363,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                             <img
                                               src={
                                                 process.env.PUBLIC_URL +
-                                                "/img/like.png"
+                                                '/img/like.png'
                                               }
                                               alt=""
                                               className="w-[16px] h-[16px]"
@@ -389,12 +389,12 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                     }
                                     onMouseEnter={(e) => {
                                       setOpenToolTip({
-                                        type: "top",
+                                        type: 'top',
                                         top: e.target.getBoundingClientRect()
                                           .top,
                                         left: e.target.getBoundingClientRect()
                                           .left,
-                                        data: ["Bày tỏ cảm xúc"],
+                                        data: ['Bày tỏ cảm xúc'],
                                       });
                                     }}
                                     onMouseLeave={() => {
@@ -404,8 +404,8 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                       openReactControl &&
                                       openReactControl.content.id === content.id
                                         ? {
-                                            backgroundColor: "#eee",
-                                            visibility: "visible",
+                                            backgroundColor: '#eee',
+                                            visibility: 'visible',
                                           }
                                         : {}
                                     }
@@ -427,26 +427,28 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                     </ul>
                   </div>
                   <div className="h-[7px] invisible"></div>
-                  {messageRender.lastMessage && messageRender.lastMessage.readed.length > 0 && messageRender.lastMessage.id===message.id && (
-                    <div className="flex justify-end mr-[6px] relative z-[10]">
-                      {messageRender.lastMessage.readed
-                        .filter((r) => r !== undefined)
-                        .filter((r) => r.uid !== user.uid)
-                        .slice(0, 4)
-                        .map((r) => (
-                          <img
-                            key={r.uid}
-                            src={getPhotoURL(r)}
-                            alt=""
-                            className="w-[14px] h-[14px] rounded-full mr-[2px]"
-                          />
-                        ))}
-                    </div>
-                  )}
+                  {messageRender.lastMessage &&
+                    messageRender.lastMessage.readed.length > 0 &&
+                    messageRender.lastMessage.id === message.id && (
+                      <div className="flex justify-end mr-[6px] relative z-[10]">
+                        {messageRender.lastMessage.readed
+                          .filter((r) => r !== undefined)
+                          .filter((r) => r.uid !== user.uid)
+                          .slice(0, 4)
+                          .map((r) => (
+                            <img
+                              key={r.uid}
+                              src={getPhotoURL(r)}
+                              alt=""
+                              className="w-[14px] h-[14px] rounded-full mr-[2px]"
+                            />
+                          ))}
+                      </div>
+                    )}
                 </div>
               );
-            } 
-            if(!message.type&&message.isOwnMess) {
+            }
+            if (!message.type && message.isOwnMess) {
               return (
                 <div key={message.id}>
                   {message.isShowTime && (
@@ -459,13 +461,13 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                       {message.contents.map((content, index) => {
                         const style = {};
                         if (message.contents.length === 1) {
-                          style.borderTopRightRadius = "18px";
-                          style.borderBottomRightRadius = "18px";
+                          style.borderTopRightRadius = '18px';
+                          style.borderBottomRightRadius = '18px';
                         }
                         if (message.contents.length >= 2) {
-                          if (index === 0) style.borderTopRightRadius = "18px";
+                          if (index === 0) style.borderTopRightRadius = '18px';
                           if (index === message.contents.length - 1)
-                            style.borderBottomRightRadius = "18px";
+                            style.borderBottomRightRadius = '18px';
                         }
                         return (
                           <li
@@ -482,12 +484,12 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                     }
                                     onMouseEnter={(e) => {
                                       setOpenToolTip({
-                                        type: "top",
+                                        type: 'top',
                                         top: e.target.getBoundingClientRect()
                                           .top,
                                         left: e.target.getBoundingClientRect()
                                           .left,
-                                        data: ["Bày tỏ cảm xúc"],
+                                        data: ['Bày tỏ cảm xúc'],
                                       });
                                     }}
                                     onMouseLeave={() => {
@@ -497,8 +499,8 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                       openReactControl &&
                                       openReactControl.content.id === content.id
                                         ? {
-                                            backgroundColor: "#eee",
-                                            visibility: "visible",
+                                            backgroundColor: '#eee',
+                                            visibility: 'visible',
                                           }
                                         : {}
                                     }
@@ -544,7 +546,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/love.png"
+                                            '/img/love.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -556,7 +558,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/haha.png"
+                                            '/img/haha.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -568,7 +570,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/wow.png"
+                                            '/img/wow.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -580,7 +582,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/sad.png"
+                                            '/img/sad.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -592,7 +594,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/angry.png"
+                                            '/img/angry.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -604,7 +606,7 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                                         <img
                                           src={
                                             process.env.PUBLIC_URL +
-                                            "/img/like.png"
+                                            '/img/like.png'
                                           }
                                           alt=""
                                           className="w-[16px] h-[16px]"
@@ -631,35 +633,41 @@ function Content({ focusControl, top=76 , bottom=65 }) {
                   {messageRender.lastMessage &&
                     messageRender.lastMessage.readed.length === 1 &&
                     messageRender.lastMessage.readed[0].uid === user.uid &&
-                    messageRender.lastMessage.id === message.contents[message.contents.length-1].id &&
-                    (<div className="flex justify-end mr-[6px] relative z-[10]">
+                    messageRender.lastMessage.id ===
+                      message.contents[message.contents.length - 1].id && (
+                      <div className="flex justify-end mr-[6px] relative z-[10]">
                         <div
                           className="w-[14px] h-[14px] rounded-full mr-[2px] absolute right-[-4px] text-[#8A8D91]"
                           style={{
                             bottom:
-                              countReaction(messageRender.lastMessage) > 0 ? "32px" : "16px",
+                              countReaction(messageRender.lastMessage) > 0
+                                ? '32px'
+                                : '16px',
                           }}
                         >
                           <FontAwesomeIcon icon={faCheckCircle} />
                         </div>
                       </div>
                     )}
-                  {messageRender.lastMessage && messageRender.lastMessage.readed.length && messageRender.lastMessage.id===message.contents[message.contents.length-1].id && (
-                    <div className="flex justify-end mr-[6px] relative z-[10]">
-                      {messageRender.lastMessage.readed
-                        .filter((r) => r !== undefined)
-                        .filter((r) => r.uid !== user.uid)
-                        .slice(0, 4)
-                        .map((r) => (
-                          <img
-                            key={r.uid}
-                            src={getPhotoURL(r)}
-                            alt=""
-                            className="w-[14px] h-[14px] rounded-full mr-[2px]"
-                          />
-                        ))}
-                    </div>
-                  )}
+                  {messageRender.lastMessage &&
+                    messageRender.lastMessage.readed.length &&
+                    messageRender.lastMessage.id ===
+                      message.contents[message.contents.length - 1].id && (
+                      <div className="flex justify-end mr-[6px] relative z-[10]">
+                        {messageRender.lastMessage.readed
+                          .filter((r) => r !== undefined)
+                          .filter((r) => r.uid !== user.uid)
+                          .slice(0, 4)
+                          .map((r) => (
+                            <img
+                              key={r.uid}
+                              src={getPhotoURL(r)}
+                              alt=""
+                              className="w-[14px] h-[14px] rounded-full mr-[2px]"
+                            />
+                          ))}
+                      </div>
+                    )}
                 </div>
               );
             }

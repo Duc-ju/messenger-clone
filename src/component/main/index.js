@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
-import { AppContext } from "../../context/AppProvider";
-import ReactionListModal from "./ReactionListModal";
-import ReactControl from "./ReactControl";
-import ChangeRoomNameModal from "./ChangeRoomNameModal";
-import AddMemberModal from "./AddMemberModal";
-import Control from "./Control";
-import ChatBox from "./ChatBox";
-import Info from "./Info";
-import ToolTip from "./ToolTip";
+import { useContext, useState } from 'react';
+import { AppContext } from '../../context/AppProvider';
+import ReactionListModal from './ReactionListModal';
+import ReactControl from './ReactControl';
+import ChangeRoomNameModal from './ChangeRoomNameModal';
+import AddMemberModal from './AddMemberModal';
+import Control from './Control';
+import ChatBox from './ChatBox';
+import Info from './Info';
+import ToolTip from './ToolTip';
 
 function Main() {
   const {
@@ -16,10 +16,10 @@ function Main() {
     isOpenCreateRoom,
     openReactControl,
     openToolTip,
-    openReactionList
+    openReactionList,
   } = useContext(AppContext);
   const [openChangeRoomName, setOpenChangeRoomName] = useState(false);
-  const [openAddMember, setOpenAddMember] = useState(false)
+  const [openAddMember, setOpenAddMember] = useState(false);
   return (
     <div className="overflow-hidden">
       <div className="flex">
@@ -30,7 +30,7 @@ function Main() {
           <div
             className="relative z-0"
             style={{
-              width: openInfo ? "47%" : "72%",
+              width: openInfo ? '47%' : '72%',
             }}
           >
             <ChatBox />
@@ -38,22 +38,25 @@ function Main() {
         )}
         <div
           style={{
-            display: openInfo ? "block" : "hidden",
-            width: openInfo ? "25%" : "0%",
+            display: openInfo ? 'block' : 'hidden',
+            width: openInfo ? '25%' : '0%',
           }}
         >
-          {currentRoom && openInfo && 
-          <Info 
-          setOpenChangeRoomName={setOpenChangeRoomName} 
-          setOpenAddMember={setOpenAddMember}
-          />}
+          {currentRoom && openInfo && (
+            <Info
+              setOpenChangeRoomName={setOpenChangeRoomName}
+              setOpenAddMember={setOpenAddMember}
+            />
+          )}
         </div>
       </div>
       {openReactionList && <ReactionListModal />}
       {openReactControl && <ReactControl />}
       {openToolTip && <ToolTip />}
-      {openChangeRoomName&&<ChangeRoomNameModal setOpenChangeRoomName={setOpenChangeRoomName} />}
-      {openAddMember &&<AddMemberModal setOpenAddMember={setOpenAddMember} />}
+      {openChangeRoomName && (
+        <ChangeRoomNameModal setOpenChangeRoomName={setOpenChangeRoomName} />
+      )}
+      {openAddMember && <AddMemberModal setOpenAddMember={setOpenAddMember} />}
     </div>
   );
 }

@@ -1,18 +1,18 @@
-import { useContext, useState, useEffect } from "react";
-import { AppContext } from "../../context/AppProvider";
-import { AuthContext } from "../../context/AuthProvider";
-import { fetchUserList } from "../../logic/fetchUserList";
-import { getPhotoURL } from "../../logic/getPhotoURL";
-import { getShortString } from "../../logic/getShortString";
-import { db } from "../../firebase/config";
-import { addDocument } from "../../firebase/services";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useState, useEffect } from 'react';
+import { AppContext } from '../../context/AppProvider';
+import { AuthContext } from '../../context/AuthProvider';
+import { fetchUserList } from '../../logic/fetchUserList';
+import { getPhotoURL } from '../../logic/getPhotoURL';
+import { getShortString } from '../../logic/getShortString';
+import { db } from '../../firebase/config';
+import { addDocument } from '../../firebase/services';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 function AddMemberModal({ setOpenAddMember }) {
   const { currentRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [choosers, setChoosers] = useState([]);
   const [results, setResults] = useState([]);
 
@@ -50,7 +50,7 @@ function AddMemberModal({ setOpenAddMember }) {
       );
     } else {
       if (choosers.length + currentRoom.members.length === 10) {
-        alert("Phòng chỉ hỗ trợ tối đa 10 thành viên!");
+        alert('Phòng chỉ hỗ trợ tối đa 10 thành viên!');
       } else {
         setChoosers((oldChoosers) => [...oldChoosers, userChoosed]);
       }
@@ -65,18 +65,18 @@ function AddMemberModal({ setOpenAddMember }) {
 
   const handleSubmit = () => {
     if (choosers.length === 0) return;
-    const roomRef = db.collection("rooms").doc(currentRoom.id);
+    const roomRef = db.collection('rooms').doc(currentRoom.id);
     roomRef.update({
       members: [
         ...choosers.map((chooser) => chooser.uid),
         ...currentRoom.members.map((member) => member.uid),
       ],
     });
-    addDocument("messages", {
+    addDocument('messages', {
       uid: user.uid,
       rid: currentRoom.id,
       displayName: user.displayName,
-      type: "log5",
+      type: 'log5',
       readed: [user.uid],
     });
     setOpenAddMember(false);
@@ -197,9 +197,9 @@ function AddMemberModal({ setOpenAddMember }) {
               style={
                 choosers.length === 0
                   ? {
-                      backgroundColor: "#eee",
-                      color: "#65676B",
-                      cursor: "not-allowed",
+                      backgroundColor: '#eee',
+                      color: '#65676B',
+                      cursor: 'not-allowed',
                     }
                   : {}
               }

@@ -1,8 +1,8 @@
-import { useState, useContext, useRef, useLayoutEffect } from "react";
-import { AppContext } from "../../../context/AppProvider";
-import { AuthContext } from "../../../context/AuthProvider";
-import { addDocument } from "../../../firebase/services";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useContext, useRef, useLayoutEffect } from 'react';
+import { AppContext } from '../../../context/AppProvider';
+import { AuthContext } from '../../../context/AuthProvider';
+import { addDocument } from '../../../firebase/services';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlusCircle,
   faImage,
@@ -11,10 +11,10 @@ import {
   faThumbsUp,
   faSmile,
   faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 function Control({ focusControl, setFocusControl }) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [isTyped, setIsTyped] = useState(false);
   const inputElement = useRef();
 
@@ -29,15 +29,15 @@ function Control({ focusControl, setFocusControl }) {
     setIsOpenCreateRoom,
     setMessagePending,
     searchRoom,
-    setMessageServerIsChanged
+    setMessageServerIsChanged,
   } = useContext(AppContext);
   const { user } = useContext(AuthContext);
 
   const handleButtonSubmit = () => {
     if (isOpenCreateRoom) {
-      if (message.replace(/\s/g, "").length) {
+      if (message.replace(/\s/g, '').length) {
         if (!searchRoom) {
-          addDocument("rooms", {
+          addDocument('rooms', {
             members: [...choosers, user].map((member) => member.uid),
           });
           setIsOpenCreateRoom(false);
@@ -46,7 +46,7 @@ function Control({ focusControl, setFocusControl }) {
           setOpenInfo(true);
           setMessagePending(message);
         } else {
-          addDocument("messages", {
+          addDocument('messages', {
             uid: user.uid,
             displayName: user.displayName,
             photoURL: user.photoURL,
@@ -58,19 +58,19 @@ function Control({ focusControl, setFocusControl }) {
             sad: [],
             angry: [],
             like: [],
-            readed: [user.uid]
+            readed: [user.uid],
           });
           setCurrentRoom(searchRoom);
           setIsOpenCreateRoom(false);
           setChoosers([]);
           setOpenInfo(true);
-          setMessage("");
-          setMessageServerIsChanged(true)
+          setMessage('');
+          setMessageServerIsChanged(true);
         }
       }
     } else {
-      if (message.replace(/\s/g, "").length) {
-        addDocument("messages", {
+      if (message.replace(/\s/g, '').length) {
+        addDocument('messages', {
           uid: user.uid,
           displayName: user.displayName,
           photoURL: user.photoURL,
@@ -82,38 +82,37 @@ function Control({ focusControl, setFocusControl }) {
           sad: [],
           angry: [],
           like: [],
-          readed: [user.uid]
+          readed: [user.uid],
         });
-        setMessage("");
-        setMessageServerIsChanged(true)
+        setMessage('');
+        setMessageServerIsChanged(true);
       }
     }
     setIsTyped(false);
   };
 
   const handleSubmit = (e) => {
-    if (e.code === "Enter") {
+    if (e.code === 'Enter') {
       handleButtonSubmit();
     }
   };
 
   useLayoutEffect(() => {
-    if(focusControl) inputElement.current.focus()
-    else inputElement.current.blur()
-  },[focusControl])
+    if (focusControl) inputElement.current.focus();
+    else inputElement.current.blur();
+  }, [focusControl]);
 
   const handleChange = (e) => {
     setMessage(e.target.value);
-    if (e.target.value.replace(/\s/g, "").length) setIsTyped(true);
+    if (e.target.value.replace(/\s/g, '').length) setIsTyped(true);
     else setIsTyped(false);
   };
-
 
   return (
     <div
       className="fixed bottom-0 z-10 py-[12px] border-r bg-white"
       style={{
-        width: openInfo ? "47%" : "72%",
+        width: openInfo ? '47%' : '72%',
       }}
     >
       <div className="flex">

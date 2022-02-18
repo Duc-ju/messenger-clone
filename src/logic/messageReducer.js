@@ -1,18 +1,17 @@
 export function messageReducer(messages, room, uid) {
-  if (!room) return {
-    messages: [],
-  };
+  if (!room)
+    return {
+      messages: [],
+    };
   messages = messages.filter((message) => message && message.createAt);
-  if (!messages || !messages.length) return {
-    messages: [],
-  };
+  if (!messages || !messages.length)
+    return {
+      messages: [],
+    };
   let newMess = [];
-  if(messages[0].type){
-    newMess = [
-      messages[0]
-    ]
-  }
-  else{
+  if (messages[0].type) {
+    newMess = [messages[0]];
+  } else {
     newMess = [
       {
         id: messages[0].id,
@@ -52,11 +51,10 @@ export function messageReducer(messages, room, uid) {
   }
   let j = 1;
   for (let i = 1; i < messages.length; i++) {
-    if(messages[i].type){
-      newMess = [...newMess, messages[i]]
-      j++
-    }
-    else if (
+    if (messages[i].type) {
+      newMess = [...newMess, messages[i]];
+      j++;
+    } else if (
       newMess[j - 1].contents &&
       messages[i].uid === newMess[j - 1].uid &&
       Math.abs(messages[i].createAt.seconds - newMess[j - 1].createAt.seconds) <
@@ -97,7 +95,13 @@ export function messageReducer(messages, room, uid) {
           displayName: messages[i].displayName,
           photoURL: messages[i].photoURL,
           isOwnMess: messages[i].uid === uid,
-          isShowTime: (newMess[j - 1].type!==undefined || (Math.abs(messages[i].createAt.seconds - newMess[j - 1].createAt.seconds) > 600)) ? true : false,
+          isShowTime:
+            newMess[j - 1].type !== undefined ||
+            Math.abs(
+              messages[i].createAt.seconds - newMess[j - 1].createAt.seconds
+            ) > 600
+              ? true
+              : false,
           createAt: messages[i].createAt,
           contents: [
             {
@@ -129,18 +133,22 @@ export function messageReducer(messages, room, uid) {
       j++;
     }
   }
-  let lastMessage
-  if(messages.length>0){
-    let newMessages =  messages.filter(message => message.type === undefined)
-    let messageTmp
-    if(newMessages.length>0) messageTmp = newMessages[newMessages.length-1]
-    lastMessage = {
-      id: messageTmp.id,
-      readed: messageTmp.readed.map(uid => room.members.filter((m) => m.uid === uid)[0])
+  let lastMessage;
+  if (messages.length > 0) {
+    let newMessages = messages.filter((message) => message.type === undefined);
+    let messageTmp;
+    if (newMessages.length > 0) {
+      messageTmp = newMessages[newMessages.length - 1];
+      lastMessage = {
+        id: messageTmp.id,
+        readed: messageTmp.readed.map(
+          (uid) => room.members.filter((m) => m.uid === uid)[0]
+        ),
+      };
     }
   }
   return {
     messages: newMess,
-    lastMessage
+    lastMessage,
   };
 }

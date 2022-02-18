@@ -1,26 +1,26 @@
-import { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../../context/AppProvider";
-import { AuthContext } from "../../../context/AuthProvider";
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../../../context/AppProvider';
+import { AuthContext } from '../../../context/AuthProvider';
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
   connectStorageEmulator,
-  deleteObject 
-} from "firebase/storage";
-import { db } from '../../../firebase/config'
-import { addDocument } from "../../../firebase/services";
-import { getRoomName } from "../../../logic/getRoomName";
-import { getPhotoURL } from "../../../logic/getPhotoURL";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+  deleteObject,
+} from 'firebase/storage';
+import { db } from '../../../firebase/config';
+import { addDocument } from '../../../firebase/services';
+import { getRoomName } from '../../../logic/getRoomName';
+import { getPhotoURL } from '../../../logic/getPhotoURL';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSortDown,
   faPen,
   faSortUp,
   faPlus,
   faImage,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 function Info({ setOpenChangeRoomName, setOpenAddMember }) {
   const [height, setHeight] = useState(window.innerHeight);
@@ -33,54 +33,62 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
     function handleResize() {
       setHeight(window.innerHeight);
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const handleChooseFile = (e) => {
     const file = e.target.files[0];
-    if(file.type.split('/').length===0 || file.type.split('/')[0] !== 'image'){
-      alert('Vui lòng chọn file hình ảnh')
-      return
+    if (
+      file.type.split('/').length === 0 ||
+      file.type.split('/')[0] !== 'image'
+    ) {
+      alert('Vui lòng chọn file hình ảnh');
+      return;
     }
-    if(file.size > 1048576){
-      alert('Vui lòng chọn ảnh có kích thước dưới 1MB và tỉ lệ 1:1')
-      return
+    if (file.size > 1048576) {
+      alert('Vui lòng chọn ảnh có kích thước dưới 1MB và tỉ lệ 1:1');
+      return;
     }
-    const fileName = (Math.random()+'').split('.')[1]+file.name
+    const fileName = (Math.random() + '').split('.')[1] + file.name;
     const storage = getStorage();
-    if(window.location.hostname === 'localhost'){
-        connectStorageEmulator(storage, "localhost", 9199);
+    if (window.location.hostname === 'localhost') {
+      connectStorageEmulator(storage, 'localhost', 9199);
     }
-    const storageRef = ref(storage, "images/" + fileName);
+    const storageRef = ref(storage, 'images/' + fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
-      "state_changed",
+      'state_changed',
       () => {},
       () => {},
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            if(currentRoom.photoURL&&currentRoom.photoDirectory&&currentRoom.photoURL.length>0&&currentRoom.photoDirectory.length>0){
-                const desertRef = ref(storage, currentRoom.photoDirectory);
-                deleteObject(desertRef).then(() => {}).catch(() => {});
-            }
-            const roomRef = db
-            .collection("rooms")
-            .doc(currentRoom.id);
-            roomRef.update({
-                photoURL: downloadURL,
-                photoDirectory: "images/" + fileName
-            });
-            addDocument("messages", {
-              uid: user.uid,
-              rid: currentRoom.id,
-              displayName: user.displayName,
-              type: "log4",
-              readed: [user.uid],
-            });
+          if (
+            currentRoom.photoURL &&
+            currentRoom.photoDirectory &&
+            currentRoom.photoURL.length > 0 &&
+            currentRoom.photoDirectory.length > 0
+          ) {
+            const desertRef = ref(storage, currentRoom.photoDirectory);
+            deleteObject(desertRef)
+              .then(() => {})
+              .catch(() => {});
+          }
+          const roomRef = db.collection('rooms').doc(currentRoom.id);
+          roomRef.update({
+            photoURL: downloadURL,
+            photoDirectory: 'images/' + fileName,
+          });
+          addDocument('messages', {
+            uid: user.uid,
+            rid: currentRoom.id,
+            displayName: user.displayName,
+            type: 'log4',
+            readed: [user.uid],
+          });
         });
       }
     );
@@ -148,22 +156,24 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
         </p>
       </div>
       <div className="py-[20px]">
-        {currentRoom.members.length>2&&<div className="px-[8px] text-left rounded-[8px]">
-          <div
-            className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer"
-            onClick={() => setIsOpenSetting((old) => !old)}
-          >
-            <div className="font-semibold">Tuỳ chỉnh đoạn chat</div>
-            <div className="py-[8px] px-[16px] flex items-center justify-center">
-              {!isOpenSetting ? (
-                <FontAwesomeIcon className="mr-[8px]" icon={faSortDown} />
-              ) : (
-                <FontAwesomeIcon className="mr-[8px]" icon={faSortUp} />
-              )}
+        {currentRoom.members.length > 2 && (
+          <div className="px-[8px] text-left rounded-[8px]">
+            <div
+              className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer"
+              onClick={() => setIsOpenSetting((old) => !old)}
+            >
+              <div className="font-semibold">Tuỳ chỉnh đoạn chat</div>
+              <div className="py-[8px] px-[16px] flex items-center justify-center">
+                {!isOpenSetting ? (
+                  <FontAwesomeIcon className="mr-[8px]" icon={faSortDown} />
+                ) : (
+                  <FontAwesomeIcon className="mr-[8px]" icon={faSortUp} />
+                )}
+              </div>
             </div>
           </div>
-        </div>}
-        {currentRoom.members.length>2&&isOpenSetting && (
+        )}
+        {currentRoom.members.length > 2 && isOpenSetting && (
           <ul className="px-[8px]">
             <li
               className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer"
@@ -178,7 +188,7 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
             </li>
             <li
               className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer relative"
-              onClick={() => document.getElementById("inputFile").click()}
+              onClick={() => document.getElementById('inputFile').click()}
             >
               <div className="py-[8px] pr-[12px] flex justify-center items-center">
                 <div className="w-[24px] h-[24px] flex justify-center items-center">
@@ -196,36 +206,37 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
           </ul>
         )}
 
-        {currentRoom.members.length > 2 &&<div className="px-[8px] text-left rounded-[8px]">
-          <div className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer">
-            <div className="font-semibold">Tuỳ chọn nhóm</div>
-            <div className="py-[8px] px-[16px] flex items-center justify-center">
-              <FontAwesomeIcon className="mr-[8px]" icon={faSortDown} />
-            </div>
-          </div>
-        </div>}
-        {currentRoom.members.length > 2 &&<div className="px-[8px] text-left rounded-[8px]">
-          <div
-            className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer"
-            onClick={() => setIsOpenMembers((old) => !old)}
-          >
-            <div className="font-semibold">Thành viên trong đoạn chat</div>
-            <div className="py-[8px] px-[16px] flex items-center justify-center">
-              {!isOpenMembers ? (
+        {currentRoom.members.length > 2 && (
+          <div className="px-[8px] text-left rounded-[8px]">
+            <div className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer">
+              <div className="font-semibold">Tuỳ chọn nhóm</div>
+              <div className="py-[8px] px-[16px] flex items-center justify-center">
                 <FontAwesomeIcon className="mr-[8px]" icon={faSortDown} />
-              ) : (
-                <FontAwesomeIcon className="mr-[8px]" icon={faSortUp} />
-              )}
+              </div>
             </div>
           </div>
-        </div>}
-        {currentRoom.members.length>2&&isOpenMembers && (
+        )}
+        {currentRoom.members.length > 2 && (
+          <div className="px-[8px] text-left rounded-[8px]">
+            <div
+              className="flex justify-between items-center py-[6px] pl-[8px] rounded-[8px] hover:bg-[#eee] cursor-pointer"
+              onClick={() => setIsOpenMembers((old) => !old)}
+            >
+              <div className="font-semibold">Thành viên trong đoạn chat</div>
+              <div className="py-[8px] px-[16px] flex items-center justify-center">
+                {!isOpenMembers ? (
+                  <FontAwesomeIcon className="mr-[8px]" icon={faSortDown} />
+                ) : (
+                  <FontAwesomeIcon className="mr-[8px]" icon={faSortUp} />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        {currentRoom.members.length > 2 && isOpenMembers && (
           <ul className="px-[8px]">
             {currentRoom.members.map((member) => (
-              <li 
-              className="flex px-[8px] items-center"
-              key={member.uid}
-              >
+              <li className="flex px-[8px] items-center" key={member.uid}>
                 <div className="py-[8px] pr-[12px] flex justify-center items-center">
                   <img
                     className="w-[36px] h-[36px] rounded-full"
@@ -239,9 +250,9 @@ function Info({ setOpenChangeRoomName, setOpenAddMember }) {
                 </div>
               </li>
             ))}
-            <li 
-            className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer"
-            onClick={() => setOpenAddMember(true)}
+            <li
+              className="flex px-[8px] items-center rounded-[8px] hover:bg-[#eee] cursor-pointer"
+              onClick={() => setOpenAddMember(true)}
             >
               <div className="py-[8px] pr-[12px] flex justify-center items-center">
                 <div className="w-[36px] h-[36px] flex justify-center items-center">

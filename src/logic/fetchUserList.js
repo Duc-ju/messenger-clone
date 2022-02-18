@@ -1,15 +1,15 @@
-import { db } from '../firebase/config'
+import { db } from '../firebase/config';
 export async function fetchUserList(search, curChoosers, curUser) {
-  let userRef = db.collection("users");
+  let userRef = db.collection('users');
   if (search.length > 0) {
     userRef = userRef.where(
-      "keywords",
-      "array-contains",
+      'keywords',
+      'array-contains',
       search?.toLowerCase()
     );
   }
   return userRef
-    .orderBy("displayName")
+    .orderBy('displayName')
     .limit(20)
     .get()
     .then((snapshot) => {

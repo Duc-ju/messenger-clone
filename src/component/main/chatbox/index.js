@@ -1,10 +1,10 @@
-import { useContext, useState, useEffect } from "react";
-import Header from "./Header";
-import Control from "./Control";
-import Content from "./Content";
-import CreaHeader from "./CreHeader";
-import CreContent from "./CreContent";
-import { AppContext } from "../../../context/AppProvider";
+import { useContext, useState, useEffect } from 'react';
+import Header from './Header';
+import Control from './Control';
+import Content from './Content';
+import CreaHeader from './CreHeader';
+import CreContent from './CreContent';
+import { AppContext } from '../../../context/AppProvider';
 
 function ChatBox() {
   const { isOpenCreateRoom, currentRoom, choosers, searchRoom } =
@@ -13,16 +13,16 @@ function ChatBox() {
   const [top, setTop] = useState();
   useEffect(() => {
     const handleVisibleChange = () => {
-        setFocusControl(!document.hidden);
+      setFocusControl(!document.hidden);
     };
-    document.addEventListener("visibilitychange", handleVisibleChange);
+    document.addEventListener('visibilitychange', handleVisibleChange);
     return () =>
-      document.removeEventListener("visibilitychange", handleVisibleChange);
+      document.removeEventListener('visibilitychange', handleVisibleChange);
   }, []);
 
   useEffect(() => {
     setFocusControl(true);
-  },[currentRoom])
+  }, [currentRoom]);
 
   return (
     <div>
@@ -30,14 +30,22 @@ function ChatBox() {
         <>
           <Header setTop={setTop} />
           <Content top={top} focusControl={focusControl} />
-          <Control focusControl={focusControl} setFocusControl={setFocusControl} />
+          <Control
+            focusControl={focusControl}
+            setFocusControl={setFocusControl}
+          />
         </>
       )}
       {isOpenCreateRoom && !currentRoom && (
         <>
           <CreaHeader setTop={setTop} />
           {searchRoom ? <Content top={top} /> : <CreContent />}
-          {choosers.length > 0 && <Control focusControl={focusControl} setFocusControl={setFocusControl} />}
+          {choosers.length > 0 && (
+            <Control
+              focusControl={focusControl}
+              setFocusControl={setFocusControl}
+            />
+          )}
         </>
       )}
     </div>

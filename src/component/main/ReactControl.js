@@ -1,7 +1,7 @@
-import { AppContext } from "../../context/AppProvider";
-import { AuthContext } from "../../context/AuthProvider";
-import { useContext, useRef, useEffect } from "react";
-import { db } from "../../firebase/config";
+import { AppContext } from '../../context/AppProvider';
+import { AuthContext } from '../../context/AuthProvider';
+import { useContext, useRef, useEffect } from 'react';
+import { db } from '../../firebase/config';
 
 function ReactControl() {
   const reacElement = useRef();
@@ -17,67 +17,73 @@ function ReactControl() {
         setOpenReactControl();
       }
     };
-    window.addEventListener("click", handleClick);
+    window.addEventListener('click', handleClick);
 
     return () => {
-      window.removeEventListener("click", handleClick);
+      window.removeEventListener('click', handleClick);
     };
   }, []);
 
   const handleLove = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
-      
+      return;
     }
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       love: [...openReactControl.content.love.map((l) => l.uid), user.uid],
@@ -87,56 +93,63 @@ function ReactControl() {
   const handleHaha = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
+      return;
     }
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       haha: [...openReactControl.content.haha.map((l) => l.uid), user.uid],
@@ -146,56 +159,63 @@ function ReactControl() {
   const handleWow = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
+      return;
     }
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       wow: [...openReactControl.content.wow.map((l) => l.uid), user.uid],
@@ -205,56 +225,63 @@ function ReactControl() {
   const handleSad = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
+      return;
     }
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       sad: [...openReactControl.content.sad.map((l) => l.uid), user.uid],
@@ -264,56 +291,63 @@ function ReactControl() {
   const handleAngry = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
+      return;
     }
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       angry: [...openReactControl.content.angry.map((l) => l.uid), user.uid],
@@ -323,56 +357,63 @@ function ReactControl() {
   const handleLike = () => {
     setOpenReactControl();
     const messageRef = db
-      .collection("messages")
+      .collection('messages')
       .doc(openReactControl.content.id);
     if (
       openReactControl.content.like.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        like: openReactControl.content.like.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        like: openReactControl.content.like
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      return
+      return;
     }
     if (
       openReactControl.content.love.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        love: openReactControl.content.love.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        love: openReactControl.content.love
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.haha.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        haha: openReactControl.content.haha.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        haha: openReactControl.content.haha
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.wow.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        wow: openReactControl.content.wow.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        wow: openReactControl.content.wow
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.sad.filter((l) => l.uid === user.uid).length > 0
     ) {
       messageRef.update({
-        sad: openReactControl.content.sad.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        sad: openReactControl.content.sad
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     if (
       openReactControl.content.angry.filter((l) => l.uid === user.uid).length >
       0
     ) {
       messageRef.update({
-        angry: openReactControl.content.angry.filter((l) => l.uid !== user.uid).map(l => l.uid),
+        angry: openReactControl.content.angry
+          .filter((l) => l.uid !== user.uid)
+          .map((l) => l.uid),
       });
-      
     }
     messageRef.update({
       like: [...openReactControl.content.like.map((l) => l.uid), user.uid],
@@ -396,10 +437,14 @@ function ReactControl() {
       >
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/love.png"}
+            src={process.env.PUBLIC_URL + '/img/love.png'}
             alt=""
             style={{
-              backgroundColor: openReactControl.content.love.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.love.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
             onClick={handleLove}
@@ -407,9 +452,13 @@ function ReactControl() {
         </div>
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/haha.png"}
+            src={process.env.PUBLIC_URL + '/img/haha.png'}
             style={{
-              backgroundColor: openReactControl.content.haha.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.haha.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             alt=""
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
@@ -418,9 +467,13 @@ function ReactControl() {
         </div>
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/wow.png"}
+            src={process.env.PUBLIC_URL + '/img/wow.png'}
             style={{
-              backgroundColor: openReactControl.content.wow.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.wow.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             alt=""
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
@@ -429,9 +482,13 @@ function ReactControl() {
         </div>
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/sad.png"}
+            src={process.env.PUBLIC_URL + '/img/sad.png'}
             style={{
-              backgroundColor: openReactControl.content.sad.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.sad.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             alt=""
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
@@ -440,9 +497,13 @@ function ReactControl() {
         </div>
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/angry.png"}
+            src={process.env.PUBLIC_URL + '/img/angry.png'}
             style={{
-              backgroundColor: openReactControl.content.angry.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.angry.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             alt=""
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"
@@ -451,9 +512,13 @@ function ReactControl() {
         </div>
         <div>
           <img
-            src={process.env.PUBLIC_URL + "/img/like.png"}
+            src={process.env.PUBLIC_URL + '/img/like.png'}
             style={{
-              backgroundColor: openReactControl.content.like.filter(l => l.uid===user.uid).length>0?'#eee':''
+              backgroundColor:
+                openReactControl.content.like.filter((l) => l.uid === user.uid)
+                  .length > 0
+                  ? '#eee'
+                  : '',
             }}
             alt=""
             className="w-[32px] h-[32px] rounded-[25%] p-[2px] cursor-pointer"

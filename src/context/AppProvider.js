@@ -1,14 +1,14 @@
-import { useContext, useMemo, useState, useEffect } from "react";
-import { db } from "../firebase/config";
-import { addDocument } from "../firebase/services";
-import { AuthContext } from "./AuthProvider";
-import React from "react";
+import { useContext, useMemo, useState, useEffect } from 'react';
+import { db } from '../firebase/config';
+import { addDocument } from '../firebase/services';
+import { AuthContext } from './AuthProvider';
+import React from 'react';
 
 async function fetchRoomMembers(room) {
   if (!room || !room.members || !room.members.length) return;
   return db
-    .collection("users")
-    .where("uid", "in", room.members)
+    .collection('users')
+    .where('uid', 'in', room.members)
     .get()
     .then((snapshot) => {
       return snapshot.docs.map((doc) => ({
@@ -22,9 +22,9 @@ async function fetchRoomMembers(room) {
 async function fetchLastestMessage(room) {
   if (!room) return;
   return db
-    .collection("messages")
-    .where("rid", "==", room.id)
-    .orderBy("createAt", "desc")
+    .collection('messages')
+    .where('rid', '==', room.id)
+    .orderBy('createAt', 'desc')
     .limit(1)
     .get()
     .then((snapshot) => {
@@ -51,15 +51,15 @@ function AuthProvider({ children }) {
 
   const roomCondition = useMemo(() => {
     return {
-      fieldName: "members",
-      operator: "array-contains",
+      fieldName: 'members',
+      operator: 'array-contains',
       compareValue: user.uid,
     };
   }, [user.uid]);
   const messageServerConditions = useMemo(() => {
     return {
-      fieldName: "rid",
-      operator: "in",
+      fieldName: 'rid',
+      operator: 'in',
       compareValue: rooms.map((room) => room.rid),
     };
   }, [rooms.length]);
@@ -71,16 +71,16 @@ function AuthProvider({ children }) {
           if (oldID) setIntervalID();
           clearInterval(oldID);
         });
-        document.title = "Messenger";
+        document.title = 'Messenger';
       }
     };
-    document.addEventListener("visibilitychange", handleVisibleChange);
+    document.addEventListener('visibilitychange', handleVisibleChange);
     return () =>
-      document.removeEventListener("visibilitychange", handleVisibleChange);
+      document.removeEventListener('visibilitychange', handleVisibleChange);
   }, []);
 
   useEffect(() => {
-    let collectionRef = db.collection("messages");
+    let collectionRef = db.collection('messages');
     if (
       messageServerConditions &&
       messageServerConditions.compareValue &&
@@ -105,7 +105,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     setMessageServerIsChanged(false);
-    let collectionRef = db.collection("rooms").orderBy("createAt", "desc");
+    let collectionRef = db.collection('rooms').orderBy('createAt', 'desc');
     if (
       roomCondition &&
       roomCondition.compareValue &&
@@ -135,8 +135,8 @@ function AuthProvider({ children }) {
       });
       Promise.all(promises).then((rooms) => {
         rooms.sort((a, b) => {
-          if(!a.lastestMessage||!a.lastestMessage.createAt) return -1
-          if(!b.lastestMessage||!b.lastestMessage.createAt) return 1
+          if (!a.lastestMessage || !a.lastestMessage.createAt) return -1;
+          if (!b.lastestMessage || !b.lastestMessage.createAt) return 1;
           return (
             b.lastestMessage.createAt.seconds -
             a.lastestMessage.createAt.seconds
@@ -157,14 +157,14 @@ function AuthProvider({ children }) {
           setIsOpenCreateRoom(false);
           setCurrentRoom(rooms[0]);
           setIsOpenCreateRoom(false);
-          addDocument("messages", {
+          addDocument('messages', {
             uid: user.uid,
             rid: rooms[0].id,
             displayName: user.displayName,
-            type: "log1",
+            type: 'log1',
             readed: [user.uid],
           });
-          addDocument("messages", {
+          addDocument('messages', {
             uid: user.uid,
             displayName: user.displayName,
             photoURL: user.photoURL,
@@ -181,12 +181,11 @@ function AuthProvider({ children }) {
 
           setMessageServerIsChanged(true);
         } else {
-          if(!isOpenCreateRoom){
-            
+          if (!isOpenCreateRoom) {
           }
           let check = false;
-          setIsOpenCreateRoom(oldState => {
-            if(!oldState){
+          setIsOpenCreateRoom((oldState) => {
+            if (!oldState) {
               setCurrentRoom((oldRoom) => {
                 let newRoom;
                 if (oldRoom === undefined) {
@@ -196,8 +195,9 @@ function AuthProvider({ children }) {
                       room &&
                       room.lastestMessage &&
                       room.lastestMessage.readed &&
-                      room.lastestMessage.readed.filter((r) => r.uid === user.uid)
-                        .length > 0
+                      room.lastestMessage.readed.filter(
+                        (r) => r.uid === user.uid
+                      ).length > 0
                     ) {
                       newRoom = room;
                       check = true;
@@ -215,8 +215,8 @@ function AuthProvider({ children }) {
                 return newRoom;
               });
             }
-            return oldState
-          })
+            return oldState;
+          });
           setRooms(rooms);
           check = false;
           rooms.forEach((room) => {
@@ -231,12 +231,12 @@ function AuthProvider({ children }) {
             ) {
               const id = setInterval(() => {
                 if (
-                  document.title === "Messenger" ||
-                  document.title === "(1) Messenger"
+                  document.title === 'Messenger' ||
+                  document.title === '(1) Messenger'
                 )
                   document.title =
-                    room.lastestMessage.displayName + " đã gửi một tin nhắn";
-                else document.title = "(1) Messenger";
+                    room.lastestMessage.displayName + ' đã gửi một tin nhắn';
+                else document.title = '(1) Messenger';
               }, 2000);
               setIntervalID((oldID) => {
                 if (oldID) clearInterval(oldID);
@@ -249,7 +249,13 @@ function AuthProvider({ children }) {
       });
     });
     return unsubcribe;
-  }, [roomCondition, messagePending, user, messageServerIsChanged, isOpenCreateRoom]);
+  }, [
+    roomCondition,
+    messagePending,
+    user,
+    messageServerIsChanged,
+    isOpenCreateRoom,
+  ]);
 
   return (
     <AppContext.Provider

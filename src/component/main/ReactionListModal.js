@@ -1,11 +1,11 @@
-import { AppContext } from "../../context/AppProvider";
-import { AuthContext } from "../../context/AuthProvider";
-import { useContext, useState } from "react";
-import { db } from "../../firebase/config"
-import { countReaction } from "../../logic/countReaction";
-import { getPhotoURL } from "../../logic/getPhotoURL";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { AppContext } from '../../context/AppProvider';
+import { AuthContext } from '../../context/AuthProvider';
+import { useContext, useState } from 'react';
+import { db } from '../../firebase/config';
+import { countReaction } from '../../logic/countReaction';
+import { getPhotoURL } from '../../logic/getPhotoURL';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 function ReactionList() {
   const { openReactionList, setOpenReactionList } = useContext(AppContext);
   const { user } = useContext(AuthContext);
@@ -13,42 +13,40 @@ function ReactionList() {
   const renderDatas = [
     {
       id: 1,
-      reactionName: "love",
-      data: openReactionList.love.map((l) => ({ reactionName: "love", ...l })),
+      reactionName: 'love',
+      data: openReactionList.love.map((l) => ({ reactionName: 'love', ...l })),
     },
     {
       id: 2,
-      reactionName: "haha",
-      data: openReactionList.haha.map((l) => ({ reactionName: "haha", ...l })),
+      reactionName: 'haha',
+      data: openReactionList.haha.map((l) => ({ reactionName: 'haha', ...l })),
     },
     {
       id: 3,
-      reactionName: "wow",
-      data: openReactionList.wow.map((l) => ({ reactionName: "wow", ...l })),
+      reactionName: 'wow',
+      data: openReactionList.wow.map((l) => ({ reactionName: 'wow', ...l })),
     },
     {
       id: 4,
-      reactionName: "sad",
-      data: openReactionList.sad.map((l) => ({ reactionName: "sad", ...l })),
+      reactionName: 'sad',
+      data: openReactionList.sad.map((l) => ({ reactionName: 'sad', ...l })),
     },
     {
       id: 5,
-      reactionName: "angry",
+      reactionName: 'angry',
       data: openReactionList.angry.map((l) => ({
-        reactionName: "angry",
+        reactionName: 'angry',
         ...l,
       })),
     },
     {
       id: 6,
-      reactionName: "like",
-      data: openReactionList.like.map((l) => ({ reactionName: "like", ...l })),
+      reactionName: 'like',
+      data: openReactionList.like.map((l) => ({ reactionName: 'like', ...l })),
     },
   ];
   const handleCancelReaction = (reactionName) => {
-    const messageRef = db
-      .collection("messages")
-      .doc(openReactionList.id);
+    const messageRef = db.collection('messages').doc(openReactionList.id);
     const reaction = renderDatas
       .filter((data) => data.reactionName === reactionName)[0]
       .data.filter((reactList) => reactList.uid !== user.uid)
@@ -56,7 +54,7 @@ function ReactionList() {
     messageRef.update({
       [reactionName]: reaction,
     });
-    setOpenReactionList()
+    setOpenReactionList();
   };
   const getCurrentReactionList = () => {
     if (!currentReaction)
@@ -66,7 +64,7 @@ function ReactionList() {
         .sort((a, b) => {
           if (a.uid === user.uid) return -1;
           if (b.uid === user.uid) return 1;
-          return 0
+          return 0;
         });
     return currentReaction.data;
   };
@@ -91,14 +89,14 @@ function ReactionList() {
           <div
             className="flex justify-center cursor-pointer items-center h-[60px]"
             style={{
-              borderBottom: currentReaction ? "" : "3px solid #0099FF",
+              borderBottom: currentReaction ? '' : '3px solid #0099FF',
             }}
             onClick={() => setCurrentReaction()}
           >
             <div
               className="px-[16px] flex justify-center items-center color-[#0099FF]"
               style={{
-                color: currentReaction ? "#65676B" : "#0099FF",
+                color: currentReaction ? '#65676B' : '#0099FF',
               }}
             >
               <div className="text-[15px] font-semibold">
@@ -115,8 +113,8 @@ function ReactionList() {
                 style={{
                   borderBottom:
                     currentReaction && currentReaction.id === renderData.id
-                      ? "3px solid #0099FF"
-                      : "",
+                      ? '3px solid #0099FF'
+                      : '',
                 }}
                 onClick={() => setCurrentReaction(renderData)}
               >
@@ -125,9 +123,9 @@ function ReactionList() {
                     <img
                       src={
                         process.env.PUBLIC_URL +
-                        "/img/" +
+                        '/img/' +
                         renderData.reactionName +
-                        ".png"
+                        '.png'
                       }
                       className="w-[20px] h-[20px]"
                       alt=""
@@ -138,8 +136,8 @@ function ReactionList() {
                     style={{
                       color:
                         currentReaction && currentReaction.id === renderData.id
-                          ? "#0099FF"
-                          : "#65676B",
+                          ? '#0099FF'
+                          : '#65676B',
                     }}
                   >
                     {renderData.data.length}
@@ -155,7 +153,7 @@ function ReactionList() {
                 <div
                   className="flex justify-between w-full rounded-[8px] p-[8px]"
                   style={{
-                    cursor: react.uid === user.uid ? "pointer" : "",
+                    cursor: react.uid === user.uid ? 'pointer' : '',
                   }}
                   onClick={() => handleCancelReaction(react.reactionName)}
                 >
@@ -183,9 +181,9 @@ function ReactionList() {
                       <img
                         src={
                           process.env.PUBLIC_URL +
-                          "/img/" +
+                          '/img/' +
                           react.reactionName +
-                          ".png"
+                          '.png'
                         }
                         className="w-[28px] h-[28px]"
                         alt=""

@@ -1,15 +1,15 @@
-import { useState, useCallback, useContext } from "react";
-import { AuthContext } from "../../../context/AuthProvider";
-import { AppContext } from "../../../context/AppProvider";
-import { getPhotoURL } from "../../../logic/getPhotoURL";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useCallback, useContext } from 'react';
+import { AuthContext } from '../../../context/AuthProvider';
+import { AppContext } from '../../../context/AppProvider';
+import { getPhotoURL } from '../../../logic/getPhotoURL';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEllipsisH,
   faVideo,
   faEdit,
   faSearch,
-} from "@fortawesome/free-solid-svg-icons";
-import PopUp from "./PopUp";
+} from '@fortawesome/free-solid-svg-icons';
+import PopUp from './PopUp';
 
 function Header() {
   const [displayPopUp, setDisplayPopUp] = useState(false);

@@ -1,18 +1,15 @@
-import { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../../context/AppProvider";
-import { AuthContext } from "../../../context/AuthProvider";
-import { getRoomName } from "../../../logic/getRoomName";
-import { getPhotoURL } from "../../../logic/getPhotoURL";
-import { getShortString } from "../../../logic/getShortString";
-import { getMessageLog } from "../../../logic/getMessageLog";
-import { getRangeOfTimeToCurrent } from "../../../logic/getRangeOfTimeToCurrent";
-import { getUserName } from "../../../logic/getUserName";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faCheckCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import "./scrollBar.css";
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../../../context/AppProvider';
+import { AuthContext } from '../../../context/AuthProvider';
+import { getRoomName } from '../../../logic/getRoomName';
+import { getPhotoURL } from '../../../logic/getPhotoURL';
+import { getShortString } from '../../../logic/getShortString';
+import { getMessageLog } from '../../../logic/getMessageLog';
+import { getRangeOfTimeToCurrent } from '../../../logic/getRangeOfTimeToCurrent';
+import { getUserName } from '../../../logic/getUserName';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import './scrollBar.css';
 
 function RoomList() {
   const [height, setHeight] = useState(window.innerHeight - 196);
@@ -31,9 +28,9 @@ function RoomList() {
     function handleResize() {
       setHeight(window.innerHeight - 196);
     }
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -124,10 +121,10 @@ function RoomList() {
               </div>
               <div className="col-span-7 text-left flex items-center">
                 <h3 className="text-[.9375rem] font-medium">
-                  Tin nhắn mới{" "}
+                  Tin nhắn mới{' '}
                   <span>
                     {choosers.length > 0 &&
-                      " đến " + getShortString(choosers[0].displayName, 10)}
+                      ' đến ' + getShortString(choosers[0].displayName, 10)}
                   </span>
                 </h3>
               </div>
@@ -148,7 +145,7 @@ function RoomList() {
             className="p-[8px] rounded-[8px] hover:bg-[#f5f5f5] cursor-pointer"
             style={{
               backgroundColor:
-                currentRoom && currentRoom.id === room.id ? "#f5f5f5" : "",
+                currentRoom && currentRoom.id === room.id ? '#f5f5f5' : '',
             }}
             onClick={() => handleChooseRoom(room)}
           >
@@ -209,8 +206,8 @@ function RoomList() {
                       room.lastestMessage.readed.filter(
                         (r) => r.uid === user.uid
                       ).length === 0
-                        ? "600"
-                        : "",
+                        ? '600'
+                        : '',
                   }}
                 >
                   {getRoomName(room, user.uid)}
@@ -224,16 +221,16 @@ function RoomList() {
                         room.lastestMessage.readed.filter(
                           (r) => r.uid === user.uid
                         ).length === 0
-                          ? "600"
-                          : "",
+                          ? '600'
+                          : '',
                     }}
                   >
                     <span className="text-[.8125rem]">
                       {room.lastestMessage.content
                         ? (room.lastestMessage.uid === user.uid
-                            ? "Bạn"
+                            ? 'Bạn'
                             : getUserName(room.lastestMessage)) +
-                          ": " +
+                          ': ' +
                           getShortString(room.lastestMessage.content, 18)
                         : getShortString(
                             getMessageLog(room.lastestMessage, user),
@@ -273,7 +270,7 @@ function RoomList() {
                                 ? `translateX(${
                                     (arr.length - index - 1) * 4
                                   }px)`
-                                : "0",
+                                : '0',
                             zIndex: arr.length - index,
                           }}
                         />
@@ -283,7 +280,7 @@ function RoomList() {
                     room.lastestMessage.readed.filter((r) => r.uid === user.uid)
                       .length === 0 && (
                       <img
-                        src={process.env.PUBLIC_URL + "/img/active.png"}
+                        src={process.env.PUBLIC_URL + '/img/active.png'}
                         className="w-[8px] h-[8px]"
                         alt=""
                       />

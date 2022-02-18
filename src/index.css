@@ -19,28 +19,22 @@
 }
 .container::after {
   z-index: 0;
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;
   right: 20px;
   bottom: 0;
-  background: linear-gradient(
-    #ff8fb2 0%,
-    #a797ff 50%,
-    #00e5ff 100%
-  );
+  background: linear-gradient(#ff8fb2 0%, #a797ff 50%, #00e5ff 100%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
-.shadow{
-  box-shadow: 0 12px 28px 0 rgba(0,0,0,0.2),
-  0 2px 4px 0 rgba(0,0,0,0.1),
-  inset 0 0 0 1px rgba(255,255,255,0.5);
+.shadow {
+  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .message-line:hover .reaction-icon {
   visibility: visible;
 }
-

@@ -1,38 +1,37 @@
-import { useContext, useState, } from "react";
-import { AppContext } from "../../context/AppProvider";
-import { AuthContext } from "../../context/AuthProvider";
-import { db } from "../../firebase/config";
-import { addDocument } from "../../firebase/services";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useState } from 'react';
+import { AppContext } from '../../context/AppProvider';
+import { AuthContext } from '../../context/AuthProvider';
+import { db } from '../../firebase/config';
+import { addDocument } from '../../firebase/services';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function ChangeRoomNameModal({ setOpenChangeRoomName }) {
   const { currentRoom } = useContext(AppContext);
   const { user } = useContext(AuthContext);
-  const [nameInput, setNameInput] = useState(currentRoom.displayName || "");
+  const [nameInput, setNameInput] = useState(currentRoom.displayName || '');
   const handleChangeRoomName = () => {
     let newName = nameInput.trim();
     if (newName !== currentRoom.displayName) {
-      const roomRef = db.collection("rooms").doc(currentRoom.id);
+      const roomRef = db.collection('rooms').doc(currentRoom.id);
       roomRef.update({
         displayName: newName,
       });
-      if(newName.length !==0 ){
-        addDocument("messages", {
+      if (newName.length !== 0) {
+        addDocument('messages', {
           uid: user.uid,
           rid: currentRoom.id,
           displayName: user.displayName,
-          type: "log2",
+          type: 'log2',
           data: newName,
           readed: [user.uid],
         });
-      }
-      else{
-        addDocument("messages", {
+      } else {
+        addDocument('messages', {
           uid: user.uid,
           rid: currentRoom.id,
           displayName: user.displayName,
-          type: "log3",
+          type: 'log3',
           readed: [user.uid],
         });
       }
@@ -40,8 +39,8 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
     setOpenChangeRoomName(false);
   };
   const handlekeyUp = (e) => {
-    if(e.code === 'Enter') handleChangeRoomName()
-  }
+    if (e.code === 'Enter') handleChangeRoomName();
+  };
   return (
     <div className="fixed top-0 right-[0] flex justify-center items-center bottom-0 left-0 z-[1000] before:top-0 before:absolute before:content-[''] before:right-[0] before:bottom-0 before:left-0 before:bg-[#fff] before:opacity-[60%] before:z-[0]">
       <div className="relative z-[1000] bg-white border w-[548px] shadow rounded-[8px]">
@@ -71,7 +70,7 @@ function ChangeRoomNameModal({ setOpenChangeRoomName }) {
                       Tên đoạn chat
                     </div>
                     <div className="text-[0.8125rem]">
-                      {500 - nameInput.replace(/\s/g, "").length}/500
+                      {500 - nameInput.replace(/\s/g, '').length}/500
                     </div>
                   </div>
                   <div className="pb-[10px] mr-[48px]">
